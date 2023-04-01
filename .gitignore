@@ -1,0 +1,4 @@
+.idea
+production_data
+deployment/static_collected
+fws_site/settings/prod_secrets.py

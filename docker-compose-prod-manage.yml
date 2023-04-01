@@ -1,0 +1,16 @@
+services:
+  manage:
+    extends:
+      file: docker-compose-prod.yml
+      service: web
+    build:
+      context: .
+      target: fws_manage
+    depends_on:
+      - db
+    ports: []
+
+  db:
+    extends:
+      file: docker-compose-prod.yml
+      service: db

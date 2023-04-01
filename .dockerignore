@@ -1,0 +1,8 @@
+.idea
+.git
+.gitignore
+production_data
+docker-compose*.yml
+Dockerfile
+init.sh
+Readme.md

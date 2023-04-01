@@ -1,0 +1,43 @@
+services:
+  web:
+    build:
+      context: .
+      target: fws_web
+    restart: "no"
+    environment:
+      FWSWEB_ENVIRONMENT: production
+      FWSWEB_DB_HOST: db
+    depends_on:
+      - db
+    ports:
+      - "8081:80"
+
+  db:
+    image: postgres:15.2-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: fws
+      POSTGRES_PASSWORD: fws_pass
+      POSTGRES_DB: fws
+      PGDATA: /var/lib/postgresql/data  # explicitly set it to the default location, because why not?
+    volumes:
+      - type: bind
+        source: ./production_data/db
+        target: /var/lib/postgresql/data
+        bind:
+          create_host_path: true
+        read_only: false
+    command: ["postgres",
+              "-c", "client_encoding=UTF8",
+              "-c", "default_transaction_isolation=read committed",
+              "-c", "timezone=UTC"]
+
+  rev_proxy:
+    build:
+      context: .
+      target: nginx_rev
+    restart: "no"
+    depends_on:
+      - web
+    ports:
+      - "8088:80"
