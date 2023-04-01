@@ -1,5 +1,6 @@
 FROM python:3.10-alpine as fws_app
 WORKDIR /fws
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 # install dependencies from Pipfile.lock
 COPY Pipfile Pipfile.lock ./
 RUN pip install pipenv
