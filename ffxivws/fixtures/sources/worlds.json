@@ -1,0 +1,125 @@
+{
+  "North America": {
+    "data_region_id": 2,
+    "data_centers": {
+      "Aether": [
+        "Adamantoise",
+        "Cactuar",
+        "Faerie",
+        "Gilgamesh",
+        "Jenova",
+        "Midgardsormr",
+        "Sargatanas",
+        "Siren"
+      ],
+      "Crystal": [
+        "Balmung",
+        "Brynhildr",
+        "Coeurl",
+        "Diabolos",
+        "Goblin",
+        "Malboro",
+        "Mateus",
+        "Zalera"
+      ],
+      "Dynamis": [
+        "Halicarnassus",
+        "Maduin",
+        "Marilith",
+        "Seraph"
+      ],
+      "Primal": [
+        "Behemoth",
+        "Excalibur",
+        "Exodus",
+        "Famfrit",
+        "Hyperion",
+        "Lamia",
+        "Leviathan",
+        "Ultros"
+      ]
+    }
+  },
+  "Europe": {
+    "data_region_id": 3,
+    "data_centers": {
+      "Chaos": [
+        "Cerberus",
+        "Louisoix",
+        "Moogle",
+        "Omega",
+        "Phantom",
+        "Ragnarok",
+        "Sagittarius",
+        "Spriggan"
+      ],
+      "Light": [
+        "Alpha",
+        "Lich",
+        "Odin",
+        "Phoenix",
+        "Raiden",
+        "Shiva",
+        "Twintania",
+        "Zodiark"
+      ]
+    }
+  },
+  "Oceania": {
+    "data_region_id": 4,
+    "data_centers": {
+      "Materia": [
+        "Bismarck",
+        "Ravana",
+        "Sephirot",
+        "Sophia",
+        "Zurvan"
+      ]
+    }
+  },
+  "Japan": {
+    "data_region_id": 1,
+    "data_centers": {
+      "Elemental": [
+        "Aegis",
+        "Atomos",
+        "Carbuncle",
+        "Garuda",
+        "Gungnir",
+        "Kujata",
+        "Tonberry",
+        "Typhon"
+      ],
+      "Gaia": [
+        "Alexander",
+        "Bahamut",
+        "Durandal",
+        "Fenrir",
+        "Ifrit",
+        "Ridill",
+        "Tiamat",
+        "Ultima"
+      ],
+      "Mana": [
+        "Anima",
+        "Asura",
+        "Chocobo",
+        "Hades",
+        "Ixion",
+        "Masamune",
+        "Pandaemonium",
+        "Titan"
+      ],
+      "Meteor": [
+        "Belias",
+        "Mandragora",
+        "Ramuh",
+        "Shinryu",
+        "Unicorn",
+        "Valefor",
+        "Yojimbo",
+        "Zeromus"
+      ]
+    }
+  }
+}

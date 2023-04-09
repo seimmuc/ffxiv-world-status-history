@@ -27,12 +27,13 @@ thing in those lists.
     ```shell
     ./init.sh
     ```
-    * Only docker is required beyond this step, everything else installed in steps 1 and 2 can be safely removed.
 
 4. Initialize database by running:
     ```shell
     docker compose --file docker-compose-prod-manage.yml run manage migrate
+    python manage.py loaddata --app ffxivws --format json worlds.fixture.json
     ```
+    * Only docker is required beyond this step, everything else installed in steps 1 and 2 can be safely removed.
 
 5. Start the web server:
     ```shell

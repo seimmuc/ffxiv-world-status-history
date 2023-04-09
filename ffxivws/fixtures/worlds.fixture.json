@@ -1,0 +1,770 @@
+[
+  {
+    "model": "ffxivws.Region",
+    "pk": 1,
+    "fields": {
+      "name": "North America",
+      "data_region_id": 2
+    }
+  },
+  {
+    "model": "ffxivws.DataCenter",
+    "pk": 1,
+    "fields": {
+      "region": 1,
+      "name": "Aether"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 1,
+    "fields": {
+      "data_center": 1,
+      "name": "Adamantoise"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 2,
+    "fields": {
+      "data_center": 1,
+      "name": "Cactuar"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 3,
+    "fields": {
+      "data_center": 1,
+      "name": "Faerie"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 4,
+    "fields": {
+      "data_center": 1,
+      "name": "Gilgamesh"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 5,
+    "fields": {
+      "data_center": 1,
+      "name": "Jenova"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 6,
+    "fields": {
+      "data_center": 1,
+      "name": "Midgardsormr"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 7,
+    "fields": {
+      "data_center": 1,
+      "name": "Sargatanas"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 8,
+    "fields": {
+      "data_center": 1,
+      "name": "Siren"
+    }
+  },
+  {
+    "model": "ffxivws.DataCenter",
+    "pk": 2,
+    "fields": {
+      "region": 1,
+      "name": "Crystal"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 9,
+    "fields": {
+      "data_center": 2,
+      "name": "Balmung"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 10,
+    "fields": {
+      "data_center": 2,
+      "name": "Brynhildr"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 11,
+    "fields": {
+      "data_center": 2,
+      "name": "Coeurl"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 12,
+    "fields": {
+      "data_center": 2,
+      "name": "Diabolos"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 13,
+    "fields": {
+      "data_center": 2,
+      "name": "Goblin"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 14,
+    "fields": {
+      "data_center": 2,
+      "name": "Malboro"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 15,
+    "fields": {
+      "data_center": 2,
+      "name": "Mateus"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 16,
+    "fields": {
+      "data_center": 2,
+      "name": "Zalera"
+    }
+  },
+  {
+    "model": "ffxivws.DataCenter",
+    "pk": 3,
+    "fields": {
+      "region": 1,
+      "name": "Dynamis"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 17,
+    "fields": {
+      "data_center": 3,
+      "name": "Halicarnassus"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 18,
+    "fields": {
+      "data_center": 3,
+      "name": "Maduin"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 19,
+    "fields": {
+      "data_center": 3,
+      "name": "Marilith"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 20,
+    "fields": {
+      "data_center": 3,
+      "name": "Seraph"
+    }
+  },
+  {
+    "model": "ffxivws.DataCenter",
+    "pk": 4,
+    "fields": {
+      "region": 1,
+      "name": "Primal"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 21,
+    "fields": {
+      "data_center": 4,
+      "name": "Behemoth"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 22,
+    "fields": {
+      "data_center": 4,
+      "name": "Excalibur"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 23,
+    "fields": {
+      "data_center": 4,
+      "name": "Exodus"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 24,
+    "fields": {
+      "data_center": 4,
+      "name": "Famfrit"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 25,
+    "fields": {
+      "data_center": 4,
+      "name": "Hyperion"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 26,
+    "fields": {
+      "data_center": 4,
+      "name": "Lamia"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 27,
+    "fields": {
+      "data_center": 4,
+      "name": "Leviathan"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 28,
+    "fields": {
+      "data_center": 4,
+      "name": "Ultros"
+    }
+  },
+  {
+    "model": "ffxivws.Region",
+    "pk": 2,
+    "fields": {
+      "name": "Europe",
+      "data_region_id": 3
+    }
+  },
+  {
+    "model": "ffxivws.DataCenter",
+    "pk": 5,
+    "fields": {
+      "region": 2,
+      "name": "Chaos"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 29,
+    "fields": {
+      "data_center": 5,
+      "name": "Cerberus"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 30,
+    "fields": {
+      "data_center": 5,
+      "name": "Louisoix"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 31,
+    "fields": {
+      "data_center": 5,
+      "name": "Moogle"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 32,
+    "fields": {
+      "data_center": 5,
+      "name": "Omega"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 33,
+    "fields": {
+      "data_center": 5,
+      "name": "Phantom"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 34,
+    "fields": {
+      "data_center": 5,
+      "name": "Ragnarok"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 35,
+    "fields": {
+      "data_center": 5,
+      "name": "Sagittarius"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 36,
+    "fields": {
+      "data_center": 5,
+      "name": "Spriggan"
+    }
+  },
+  {
+    "model": "ffxivws.DataCenter",
+    "pk": 6,
+    "fields": {
+      "region": 2,
+      "name": "Light"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 37,
+    "fields": {
+      "data_center": 6,
+      "name": "Alpha"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 38,
+    "fields": {
+      "data_center": 6,
+      "name": "Lich"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 39,
+    "fields": {
+      "data_center": 6,
+      "name": "Odin"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 40,
+    "fields": {
+      "data_center": 6,
+      "name": "Phoenix"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 41,
+    "fields": {
+      "data_center": 6,
+      "name": "Raiden"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 42,
+    "fields": {
+      "data_center": 6,
+      "name": "Shiva"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 43,
+    "fields": {
+      "data_center": 6,
+      "name": "Twintania"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 44,
+    "fields": {
+      "data_center": 6,
+      "name": "Zodiark"
+    }
+  },
+  {
+    "model": "ffxivws.Region",
+    "pk": 3,
+    "fields": {
+      "name": "Oceania",
+      "data_region_id": 4
+    }
+  },
+  {
+    "model": "ffxivws.DataCenter",
+    "pk": 7,
+    "fields": {
+      "region": 3,
+      "name": "Materia"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 45,
+    "fields": {
+      "data_center": 7,
+      "name": "Bismarck"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 46,
+    "fields": {
+      "data_center": 7,
+      "name": "Ravana"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 47,
+    "fields": {
+      "data_center": 7,
+      "name": "Sephirot"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 48,
+    "fields": {
+      "data_center": 7,
+      "name": "Sophia"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 49,
+    "fields": {
+      "data_center": 7,
+      "name": "Zurvan"
+    }
+  },
+  {
+    "model": "ffxivws.Region",
+    "pk": 4,
+    "fields": {
+      "name": "Japan",
+      "data_region_id": 1
+    }
+  },
+  {
+    "model": "ffxivws.DataCenter",
+    "pk": 8,
+    "fields": {
+      "region": 4,
+      "name": "Elemental"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 50,
+    "fields": {
+      "data_center": 8,
+      "name": "Aegis"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 51,
+    "fields": {
+      "data_center": 8,
+      "name": "Atomos"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 52,
+    "fields": {
+      "data_center": 8,
+      "name": "Carbuncle"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 53,
+    "fields": {
+      "data_center": 8,
+      "name": "Garuda"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 54,
+    "fields": {
+      "data_center": 8,
+      "name": "Gungnir"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 55,
+    "fields": {
+      "data_center": 8,
+      "name": "Kujata"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 56,
+    "fields": {
+      "data_center": 8,
+      "name": "Tonberry"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 57,
+    "fields": {
+      "data_center": 8,
+      "name": "Typhon"
+    }
+  },
+  {
+    "model": "ffxivws.DataCenter",
+    "pk": 9,
+    "fields": {
+      "region": 4,
+      "name": "Gaia"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 58,
+    "fields": {
+      "data_center": 9,
+      "name": "Alexander"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 59,
+    "fields": {
+      "data_center": 9,
+      "name": "Bahamut"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 60,
+    "fields": {
+      "data_center": 9,
+      "name": "Durandal"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 61,
+    "fields": {
+      "data_center": 9,
+      "name": "Fenrir"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 62,
+    "fields": {
+      "data_center": 9,
+      "name": "Ifrit"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 63,
+    "fields": {
+      "data_center": 9,
+      "name": "Ridill"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 64,
+    "fields": {
+      "data_center": 9,
+      "name": "Tiamat"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 65,
+    "fields": {
+      "data_center": 9,
+      "name": "Ultima"
+    }
+  },
+  {
+    "model": "ffxivws.DataCenter",
+    "pk": 10,
+    "fields": {
+      "region": 4,
+      "name": "Mana"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 66,
+    "fields": {
+      "data_center": 10,
+      "name": "Anima"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 67,
+    "fields": {
+      "data_center": 10,
+      "name": "Asura"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 68,
+    "fields": {
+      "data_center": 10,
+      "name": "Chocobo"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 69,
+    "fields": {
+      "data_center": 10,
+      "name": "Hades"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 70,
+    "fields": {
+      "data_center": 10,
+      "name": "Ixion"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 71,
+    "fields": {
+      "data_center": 10,
+      "name": "Masamune"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 72,
+    "fields": {
+      "data_center": 10,
+      "name": "Pandaemonium"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 73,
+    "fields": {
+      "data_center": 10,
+      "name": "Titan"
+    }
+  },
+  {
+    "model": "ffxivws.DataCenter",
+    "pk": 11,
+    "fields": {
+      "region": 4,
+      "name": "Meteor"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 74,
+    "fields": {
+      "data_center": 11,
+      "name": "Belias"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 75,
+    "fields": {
+      "data_center": 11,
+      "name": "Mandragora"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 76,
+    "fields": {
+      "data_center": 11,
+      "name": "Ramuh"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 77,
+    "fields": {
+      "data_center": 11,
+      "name": "Shinryu"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 78,
+    "fields": {
+      "data_center": 11,
+      "name": "Unicorn"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 79,
+    "fields": {
+      "data_center": 11,
+      "name": "Valefor"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 80,
+    "fields": {
+      "data_center": 11,
+      "name": "Yojimbo"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 81,
+    "fields": {
+      "data_center": 11,
+      "name": "Zeromus"
+    }
+  }
+]
