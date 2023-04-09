@@ -57,8 +57,11 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.jinja2.Jinja2',
         'NAME': 'jinja',
-        'DIRS': [],
+        # 'DIRS': [],
         'APP_DIRS': True,
+        'OPTIONS': {
+            'environment': 'ffxivws.jinja2.environment'
+        }
     },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

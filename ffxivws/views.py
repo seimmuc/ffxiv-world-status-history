@@ -5,4 +5,4 @@ from django.shortcuts import render
 
 
 def index(request: HttpRequest):
-    return render(request=request, template_name='ffxivws/index.html', context={})
+    return render(request=request, template_name='ffxivws/index.html.jinja', context={})
