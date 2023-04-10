@@ -16,3 +16,6 @@ DATABASES = {
         'CONN_HEALTH_CHECKS': False
     }
 }
+
+CELERY_BROKER_URL = 'amqp://fwshd:fwshd_pass@localhost:5672/fwsvhost'
+CELERY_RESULT_BACKEND = 'rpc://fwshd:fwshd_pass@localhost:5672/fwsvhost'

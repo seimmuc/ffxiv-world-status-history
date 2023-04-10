@@ -7,9 +7,17 @@ name = "pypi"
 django = "*"
 psycopg2 = "*"
 jinja2 = "*"
+celery = "*"
 
 [dev-packages]
 
 [requires]
 python_version = "3.10"
 python_full_version = "3.10.6"
+
+[web-server]
+django-celery-beat = "*"
+
+[background-worker]
+requests = "*"
+beautifulsoup4 = "*"
