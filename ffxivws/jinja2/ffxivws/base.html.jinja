@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% block head %}
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="{{ static('style.css') }}">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{ static('tooltips.css') }}">
+  <script src="{{ static('tooltips.js') }}"></script>
+  {% block head_extra %}{% endblock %}
+  <title>{% block title %}FFXIV World Status History{% endblock %}</title>
+  {% endblock %}
+</head>
+<body>
+  {% block body %}Nothing here{% endblock %}
+</body>
+</html>

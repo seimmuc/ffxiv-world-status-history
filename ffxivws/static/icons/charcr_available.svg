@@ -1,0 +1,18 @@
+<svg id="共通_キャラクター作成状況アイコン_" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <metadata><?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.6-c138 79.159824, 2016/09/14-01:09:01        ">
+   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <rdf:Description rdf:about=""/>
+   </rdf:RDF>
+</x:xmpmeta>
+<?xpacket end="w"?></metadata>
+<defs>
+    <style>
+      .cls-1 {
+        fill: #7acc52;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="chr_av" data-name="dchr_av" class="cls-1" d="M26,12v6H22V12H16V8h6V2h4V8h6v4H26ZM17.182,25.722c0,2.247-2.78,4.228-8.257,4.228s-8.2-1.9-8.2-4.228c0-3.916,5.837-5.065,5.837-6.91,0-1.729-3.17-1.894-3.17-7.212A5.49,5.49,0,0,1,8.861,6.012,5.587,5.587,0,0,1,14.448,11.6c0,5.372-3.276,5.478-3.276,7.207C11.172,20.594,17.182,21.631,17.182,25.722Z" transform="translate(-0.359 0.031)"/>
+</svg>

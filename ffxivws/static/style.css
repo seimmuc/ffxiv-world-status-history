@@ -1,0 +1,141 @@
+body {
+  background-color: #444;
+  color: #eee;
+}
+
+#snapshot-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#select-regions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#select-regions > button.region-toggle {
+  color: #eee;
+  background-color: rgba(0, 0, 0, 0.25);
+  padding: 15px;
+  border: none;
+}
+#select-regions > button.region-toggle.on {
+  color: #e6e6e6;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+#select-regions > button.region-toggle.on::before {
+  content: '✓ ';
+}
+#select-regions > button.region-toggle:not(.on)::before {
+  content: '× ';
+}
+#select-regions > button.region-toggle:not(.on):hover {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+#select-regions > button.region-toggle:active {
+  background-color: rgba(0, 0, 0, 0.55) !important;
+}
+
+#snapshot-main {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: start;
+  align-items: start;
+}
+
+section.snapshot-dc-block {
+  display: none;
+  overflow: hidden;
+  border-radius: 5px;
+  background-color: #0002;
+  box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.25);
+  
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(0, 0, 0, 0.5);
+
+  margin: 15px 10px;
+}
+section.snapshot-dc-block.shown {
+  display: block;
+}
+
+section.snapshot-dc-block .dc-title {
+  background-color: rgba(0, 0, 0, 0.3);
+  margin: 0;
+  padding: 0.4em 0.75em;
+  text-align: center;
+}
+
+section.snapshot-dc-block ul.dc-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+section.snapshot-dc-block ul.dc-list > li {
+  display: flex;
+  flex-direction: row;
+  padding: 9px 7px;
+  margin: 0 5px;
+}
+
+section.snapshot-dc-block ul.dc-list > li:not(:last-of-type) {
+  border-bottom: 1px solid #fff4;
+}
+
+section.snapshot-dc-block .world-name {
+  margin: 0;
+  min-width: 105px;
+}
+
+.world-icon {
+  display: block;
+}
+
+.world-icon.regular {
+  height: 16px;
+  width: 16px;
+  background-size: 16px 16px;
+}
+
+.world-icon.small {
+  height: 8px;
+  width: 8px;
+  background-size: 8px 8px;
+}
+
+.world-icon.world-icon-status-onl {
+  background-image: url(/static/icons/status_online.svg);
+}
+.world-icon.world-icon-status-mtp {
+  background-image: url(/static/icons/status_maintenancepart.svg);
+}
+.world-icon.world-icon-status-mtf {
+  background-image: url(/static/icons/status_maintenancefull.svg);
+}
+.world-icon.world-icon-classification-st {
+  background-image: url(/static/icons/classif_standard.svg);
+}
+.world-icon.world-icon-classification-nw {
+  background-image: url(/static/icons/classif_new.svg);
+}
+.world-icon.world-icon-classification-pf {
+  background-image: url(/static/icons/classif_preferred.svg);
+}
+.world-icon.world-icon-classification-cg {
+  background-image: url(/static/icons/classif_congested.svg);
+}
+.world-icon.world-icon-charcreate-1 {
+  background-image: url(/static/icons/charcr_available.svg);
+}
+.world-icon.world-icon-charcreate-0 {
+  background-image: url(/static/icons/charcr_unavailable.svg);
+}
+/* icon palette: https://coolors.co/7acc52-ad6ed4-4b8ad2-ccb233-d97777-a8a8a8 */

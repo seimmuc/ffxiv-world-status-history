@@ -1,0 +1,77 @@
+{% extends "ffxivws/base.html.jinja" %}
+
+{% block head_extra %}
+<script>
+  const rAbbr = {'North America': 'na', 'Europe': 'eu', 'Oceania': 'oc', 'Japan': 'jp'};
+  let activeRegions = new Set();
+  function updateDcs(updateUrl=false) {
+    $('.snapshot-dc-block[region-name]').each((_, block) => {
+      block = $(block);
+      block.toggleClass('shown', activeRegions.has(block.attr('region-name')));
+    });
+    if (updateUrl) {
+      const url = new URL(location);
+      if (activeRegions.size == Object.keys(rAbbr).length) {
+        url.searchParams.set('regions', 'all');
+      } else {
+        url.searchParams.set('regions', Array.from(activeRegions, e => rAbbr[e]).filter(e => e).join(','));
+        url.search = decodeURIComponent(url.search);
+      }
+      history.replaceState({}, "", url);
+    }
+  }
+  $(document).ready(function() {
+    const buttons = $('.region-toggle[region-name]');
+    buttons.each((_, button) => {
+      button = $(button);
+      const regionName = button.attr('region-name');
+      if (button.hasClass('on')) {
+        activeRegions.add(regionName);
+      }
+      button.click(_ => {
+        if (activeRegions.delete(regionName)) {
+          button.removeClass('on');
+          updateDcs(true);
+        } else {
+          activeRegions.add(regionName);
+          button.addClass('on');
+          updateDcs(true);
+        }
+      });
+    });
+    updateDcs(false);
+  });
+</script>
+{% endblock %}
+{% block title %}Snapshot view{% endblock %}
+{% block body %}
+<body>
+  <h2>Snapshot {{ snapshot.timestamp }}</h2>
+  <header id="snapshot-header">
+    <div id="select-regions">
+     {% for region_name, _ in regions.items() %}
+      <button class="region-toggle{% if region_name in regions_active %} on{% endif %}" region-name="{{ region_name }}">{{ region_name }}</button>
+     {% endfor %}
+    </div>
+  </header>
+  <main id="snapshot-main">
+   {% for reg_name, reg in regions.items() %}
+   {% for dc_name, dc in reg.items() %}
+    <section class="snapshot-dc-block{% if reg_name in regions_active %} shown{% endif %}" region-name="{{ reg_name }}">
+      <h5 class="dc-title">{{ dc_name }}</h5>
+      <ul class="dc-list">
+       {% for ws in dc %}
+        <li>
+          <p class="world-name">{{ ws.world.name }}</p>
+          <div class="world-icon regular world-icon-status-{{ ws.status|string|lower }}" tooltip-text="{{ ws.get_status_display() }}"></div>
+          <div class="world-icon regular world-icon-charcreate-{{ ws.char_creation|string }}" tooltip-text="{{ ws.get_char_creation_display() }}"></div>
+          <div class="world-icon regular world-icon-classification-{{ ws.classification|string|lower }}" tooltip-text="{{ ws.get_classification_display() }}"></div>
+        </li>
+       {% endfor %}
+      </ul>
+    </section>
+   {% endfor %}
+   {% endfor %}
+  </main>
+</body>
+{% endblock %}

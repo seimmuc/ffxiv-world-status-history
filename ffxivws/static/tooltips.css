@@ -1,0 +1,15 @@
+div.tooltip {
+  position: absolute;
+  width: auto;
+  height: auto;
+  z-index: 50;
+  padding: 5px;
+  margin-left: 20px;
+  margin-top: 20px;
+  color: black;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: smaller;
+  background-color: rgba(211, 211, 211, 0.85);
+  border-radius: 5px;
+  border: 1px solid darkgray;
+}
