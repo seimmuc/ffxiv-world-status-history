@@ -1,9 +1,10 @@
+import zoneinfo
 from itertools import chain
 from typing import Callable, TypeVar
 
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import render
-from django.views.decorators.http import require_safe
+from django.views.decorators.http import require_safe, require_POST
 
 from ffxivws.models import Snapshot, WorldState, DataCenter, Region
 
@@ -18,6 +19,8 @@ regions_abr_map = {
     'oc': 'Oceania',
     'jp': 'Japan'
 }
+TIMEZONES = zoneinfo.available_timezones()
+TIMEZONES.remove('localtime')
 
 
 @require_safe
@@ -44,6 +47,15 @@ def snapshot_details(request: HttpRequest, snap_id: int):
 
     context = {'snapshot': s, 'regions': regions, 'regions_active': r_active}
     return render(request=request, template_name='ffxivws/snapshot.html.jinja', using='jinja', context=context)
+
+
+@require_POST
+def set_timezone(request: HttpRequest):
+    tz = request.POST.get('timezone', default='UTC')
+    if tz in TIMEZONES:
+        request.session['timezone'] = tz
+    redirect_to = request.POST.get('redirect_to', default='/')
+    return HttpResponseRedirect(redirect_to=redirect_to, status=303)
 
 
 K = TypeVar('K')

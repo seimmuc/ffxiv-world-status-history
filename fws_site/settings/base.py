@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'ffxivws.middleware.TimezoneMiddleware',
 ]
 
 ROOT_URLCONF = 'fws_site.urls'
