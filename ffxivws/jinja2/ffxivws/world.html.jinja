@@ -1,0 +1,128 @@
+{% extends "ffxivws/base.html.jinja" %}
+
+{% block head_extra %}
+<script>
+  $(document).ready(function() {
+    {# Temporarily disable timezone button transitions  #}
+    $('#timezone-form button').addClass('notransition');
+    
+    const selectElm = $('#timezone-form #timezone-selector');
+    const updateBtn = $('#timezone-form #timezone-update-btn');
+    const localBtn = $('#timezone-form #timezone-local-btn');
+
+    const updateBtnWidth = updateBtn.outerWidth();
+    {# Un-hide local button to get its width, it will possibly get hidden again in selectElm.change handler #}
+    localBtn.removeClass('hidden');
+    const localBtnWidth = localBtn.outerWidth();
+    const originalTz = selectElm.find(':selected[selected]').val();
+    const savedTz = selectElm.attr('data-svtz');
+    const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (localTz !== undefined && selectElm.find(`[value='${localTz}']`).length < 1) {
+      localTz = undefined;
+    }
+
+    localBtn.click(e => {
+      let option = selectElm.find(`[value='${localTz}']`).first();
+      console.log(option);
+      if (option.length) {
+        selectElm.children('option').filter(function() {
+          const o = $(this);
+          o.prop('selected', o.val() == localTz);
+        });
+        selectElm.change();
+      }
+    });
+
+    function setButtonState(button, enabled, width) {
+      if (!button.prop('disabled') === enabled) {
+        return;
+      }
+      button.prop('disabled', !enabled);
+      if (!enabled) {
+        button.css('width', 0).css('padding', '3px 0px').css('border', 'none');
+      } else {
+        button.css('width', width).css('padding', '3px 10px').css('border', '1px solid #fff3');
+      }
+    }
+
+    selectElm.change(e => {
+      const newOption = selectElm.find(':selected');
+      
+      {# Update select element width #}
+      const tempSelect = $(`<select id="timezone-selector"><option>${newOption.text()}</option></select>`);
+      tempSelect.css('visibility', 'hidden').css('position', 'fixed');
+      tempSelect.insertAfter(selectElm);
+      const width = tempSelect.width();
+      tempSelect.remove();
+      selectElm.width(width);
+
+      {# Update button states #}
+      setButtonState(updateBtn, newOption.val() !== originalTz, updateBtnWidth);
+      setButtonState(localBtn, localTz !== undefined && newOption.val() !== localTz, localBtnWidth);
+    });
+
+    selectElm.change();
+    setTimeout(() => {
+      {# Browsers cache DOM changes, so we have to delay re-enabling transitions #}
+      $('#timezone-form button').removeClass('notransition');
+    }, 1);
+  });
+</script>
+{% endblock %}
+
+{% block title %}World {{ world.name }}{% endblock %}
+
+{% macro world_icon(icon_name, size, tooltip_text) -%}
+  <div class="world-icon {{ size }} world-icon-{{ icon_name|lower }}"{% if tooltip_text %} tooltip-text="{{ tooltip_text }}"{% endif %}></div>
+{%- endmacro %}
+
+{% macro icons_from_summary(summary, attr_name) -%}
+  {% if summary is none %}
+    {{ world_icon(attr_name + '-unknown', 'regular', 'No data') }}
+  {% elif summary[attr_name]|length == 1 %}
+    {{ world_icon(attr_name + '-' + (summary[attr_name]|first).value|string, 'regular', (summary[attr_name]|first).label) }}
+  {% else %}
+    <div class="world-icon-grid" tooltip-text="{% for val in summary[attr_name] %}{{ val.label + ('' if loop.last else '<br>') }}{% endfor %}">
+     {% for val in summary[attr_name] %}
+      {{ world_icon('{}-{}'.format(attr_name, val), 'small') }}
+     {% endfor %}
+    </div>
+  {% endif %}
+{%- endmacro %}
+
+{% block body %}
+<body>
+  <h2>World {{ world.name }}</h2>
+  
+  <header id="world-header">
+    <form id="timezone-form" action="{{ url('set_timezone') }}" method="post">
+      {{ csrf_input }}
+      <input type="hidden" name="redirect_to" value="{{ request.get_full_path() }}">
+      <label for="timezone-selector">Select timezone</label>
+      <select id="timezone-selector" name="timezone"{% if saved_ctz %} data-svtz="{{ saved_ctz }}"{% endif %}>
+       {% for tz in timezones %}
+        <option value="{{ tz }}"{% if tz == ctz %} selected{% endif %}>{{ tz }}</option>
+       {% endfor %}
+      </select>
+      <button id="timezone-local-btn" class="hidden" type="button"><span>Local</span></button>
+      <button id="timezone-update-btn" type="submit"><span>Refresh</span></button>
+    </form>
+  </header>
+  
+  <main id="world-main">
+    <div id="world-history-table">
+      <table>
+       {% for day, summary in days %}
+        <tr class="world-history-row{% if day == today %} today{% endif %}">
+          <td class="day">{% if day == today %}Today{% else %}{{ day.strftime('%x') }}{% endif %}</td>
+          <td tooltip-text="{% if summary.snapshot_count == 1 %}1 snapshot{% else %}{{ summary.snapshot_count or 0 }} snapshots{% endif %}">{{ summary.snapshot_count or 0 }}</td>
+          <td>{{ icons_from_summary(summary, 'status') }}</td>
+          <td>{{ icons_from_summary(summary, 'classification') }}</td>
+          <td>{{ icons_from_summary(summary, 'charcreate') }}</td>
+        </tr>
+       {% endfor %}
+      </table>
+    </div>
+  </main>
+</body>
+{% endblock %}
