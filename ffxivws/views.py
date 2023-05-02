@@ -106,7 +106,7 @@ def world_history(request: HttpRequest, world_name: str):
         days.append((cd, WorldStateSummary.from_world_state_list(by_day[cd]) if (cd in by_day) else None))
         cd -= timedelta(days=1)
     context = dict(days=days, world=world, from_date=from_date, today=today, timezones=TIMEZONES_LIST,
-                   current_tz=timezone.get_current_timezone_name(), saved_tz=request.session.get('timezone'))
+                   current_tz=timezone.get_current_timezone_name())
     return render(request=request, template_name='ffxivws/world.html.jinja', using='jinja', context=context)
 
 

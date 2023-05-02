@@ -11,7 +11,6 @@ $(document).ready(function() {
   localBtn.removeClass('hidden');
   const localBtnWidth = localBtn.outerWidth();
   const originalTz = selectElm.find(':selected[selected]').val();
-  const savedTz = selectElm.attr('data-svtz');
   const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   if (localTz !== undefined && selectElm.find(`[value='${localTz}']`).length < 1) {
     localTz = undefined;
