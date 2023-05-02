@@ -125,55 +125,16 @@ section.snapshot-dc-block .world-name {
   padding-right: 10px;
 }
 
-#timezone-form {
-  display: flex;
-  align-items: center;
-  width: fit-content;
-  border-radius: 6px;
-  border: 2px solid #fff1;
-  background-color: #0002;
-  padding: 5px 10px;
-  margin-bottom: 10px;
+#footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-top: solid 1.5px rgba(0, 0, 0, 0.3);
+  padding-top: 2px;
+  padding-left: 9px;
 }
-#timezone-form label {
-  padding-right: 8px;
-}
-#timezone-form #timezone-selector {
-  color: #eee;
-  background-color: #333;
-  align-self: stretch;
-  z-index: 2;
-  transition: width 0.5s;
-}
-#timezone-form button {
-  display: flex;
-  justify-content: flex-end;
-  overflow: hidden;
-  color: #eee;
-  background-color: #282828;
-  font-weight: bold;
-  padding: 3px 10px;
-  border: 1px solid #fff3;
-  border-radius: 3px;
-  z-index: 1;
-  transition: width 0.5s, padding 0.5s;
-}
-#timezone-form button.hidden {
-  width: 0px;
-  padding: 3px 0px;
-  border: none;
-}
-#timezone-form button.notransition {
-  transition: none !important;
-}
-#timezone-form button:active {
-  color: #bbb;
-  background-color: #222;
-}
-#timezone-form button#timezone-update-btn {
-  background-color: #3a3322;
-}
-
 
 .world-icon {
   display: block;

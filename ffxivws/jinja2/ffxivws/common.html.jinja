@@ -1,0 +1,19 @@
+{% macro timezone_head() %}
+  <link rel="stylesheet" href="{{ static('timezones.css') }}">
+  <script src="{{ static('timezones.js') }}"></script>
+{% endmacro %}
+
+{% macro timezones_form(csrf_input, tz_list, current_tz, saved_tz, return_url) %}
+  <form id="timezone-form" action="{{ url('set_timezone') }}" method="post">
+    {{ csrf_input }}
+    <input type="hidden" name="redirect_to" value="{{ return_url }}">
+    <label for="timezone-selector">Select timezone</label>
+    <select id="timezone-selector" name="timezone"{% if saved_tz %} data-svtz="{{ saved_tz }}"{% endif %}>
+     {% for tz in tz_list %}
+      <option value="{{ tz }}"{% if tz == current_tz %} selected{% endif %}>{{ tz }}</option>
+     {% endfor %}
+    </select>
+    <button id="timezone-local-btn" class="hidden" type="button"><span>Local</span></button>
+    <button id="timezone-update-btn" type="submit"><span>Refresh</span></button>
+  </form>
+{% endmacro %}

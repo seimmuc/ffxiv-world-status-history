@@ -1,73 +1,8 @@
 {% extends "ffxivws/base.html.jinja" %}
+{% from 'ffxivws/common.html.jinja' import timezone_head, timezones_form %}
 
 {% block head_extra %}
-<script>
-  $(document).ready(function() {
-    {# Temporarily disable timezone button transitions  #}
-    $('#timezone-form button').addClass('notransition');
-    
-    const selectElm = $('#timezone-form #timezone-selector');
-    const updateBtn = $('#timezone-form #timezone-update-btn');
-    const localBtn = $('#timezone-form #timezone-local-btn');
-
-    const updateBtnWidth = updateBtn.outerWidth();
-    {# Un-hide local button to get its width, it will possibly get hidden again in selectElm.change handler #}
-    localBtn.removeClass('hidden');
-    const localBtnWidth = localBtn.outerWidth();
-    const originalTz = selectElm.find(':selected[selected]').val();
-    const savedTz = selectElm.attr('data-svtz');
-    const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if (localTz !== undefined && selectElm.find(`[value='${localTz}']`).length < 1) {
-      localTz = undefined;
-    }
-
-    localBtn.click(e => {
-      let option = selectElm.find(`[value='${localTz}']`).first();
-      console.log(option);
-      if (option.length) {
-        selectElm.children('option').filter(function() {
-          const o = $(this);
-          o.prop('selected', o.val() == localTz);
-        });
-        selectElm.change();
-      }
-    });
-
-    function setButtonState(button, enabled, width) {
-      if (!button.prop('disabled') === enabled) {
-        return;
-      }
-      button.prop('disabled', !enabled);
-      if (!enabled) {
-        button.css('width', 0).css('padding', '3px 0px').css('border', 'none');
-      } else {
-        button.css('width', width).css('padding', '3px 10px').css('border', '1px solid #fff3');
-      }
-    }
-
-    selectElm.change(e => {
-      const newOption = selectElm.find(':selected');
-      
-      {# Update select element width #}
-      const tempSelect = $(`<select id="timezone-selector"><option>${newOption.text()}</option></select>`);
-      tempSelect.css('visibility', 'hidden').css('position', 'fixed');
-      tempSelect.insertAfter(selectElm);
-      const width = tempSelect.width();
-      tempSelect.remove();
-      selectElm.width(width);
-
-      {# Update button states #}
-      setButtonState(updateBtn, newOption.val() !== originalTz, updateBtnWidth);
-      setButtonState(localBtn, localTz !== undefined && newOption.val() !== localTz, localBtnWidth);
-    });
-
-    selectElm.change();
-    setTimeout(() => {
-      {# Browsers cache DOM changes, so we have to delay re-enabling transitions #}
-      $('#timezone-form button').removeClass('notransition');
-    }, 1);
-  });
-</script>
+  {{- timezone_head() -}}
 {% endblock %}
 
 {% block title %}World {{ world.name }}{% endblock %}
@@ -93,22 +28,6 @@
 {% block body %}
 <body>
   <h2>World {{ world.name }}</h2>
-  
-  <header id="world-header">
-    <form id="timezone-form" action="{{ url('set_timezone') }}" method="post">
-      {{ csrf_input }}
-      <input type="hidden" name="redirect_to" value="{{ request.get_full_path() }}">
-      <label for="timezone-selector">Select timezone</label>
-      <select id="timezone-selector" name="timezone"{% if saved_ctz %} data-svtz="{{ saved_ctz }}"{% endif %}>
-       {% for tz in timezones %}
-        <option value="{{ tz }}"{% if tz == ctz %} selected{% endif %}>{{ tz }}</option>
-       {% endfor %}
-      </select>
-      <button id="timezone-local-btn" class="hidden" type="button"><span>Local</span></button>
-      <button id="timezone-update-btn" type="submit"><span>Refresh</span></button>
-    </form>
-  </header>
-  
   <main id="world-main">
     <div id="world-history-table">
       <table>
@@ -124,5 +43,9 @@
       </table>
     </div>
   </main>
+
+  <footer id="footer">
+    {{ timezones_form(csrf_input, timezones, current_tz, saved_tz, request.get_full_path()) }}
+  </footer>
 </body>
 {% endblock %}
