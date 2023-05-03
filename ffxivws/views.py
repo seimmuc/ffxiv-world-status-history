@@ -1,7 +1,7 @@
 import zoneinfo
 from datetime import datetime, date, time, timedelta
 from itertools import chain
-from typing import Callable, TypeVar, NamedTuple, List, Iterator
+from typing import Callable, TypeVar, NamedTuple, List, Iterator, Any
 
 from django.db.models import QuerySet, Choices
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
@@ -36,6 +36,10 @@ CHAR_CREATION_ENUM: dict[str, WorldState.CharCreation] = {e.value: e for e in Wo
 CHAR_CREATION_ORD: dict[WorldState.CharCreation, int] = {e: i for i, e in enumerate(WorldState.CharCreation)}
 
 
+def timezone_ctx() -> dict[str, Any]:
+    return dict(timezones=TIMEZONES_LIST, current_tz=timezone.get_current_timezone_name())
+
+
 @require_safe
 def snapshot_details(request: HttpRequest, snap_id: int):
     # noinspection PyUnresolvedReferences
@@ -59,6 +63,7 @@ def snapshot_details(request: HttpRequest, snap_id: int):
         r_active = [regions_abr_map[r] for r in reg_list if r in regions_abr_map]
 
     context = {'snapshot': s, 'regions': regions, 'regions_active': r_active}
+    context.update(timezone_ctx())
     return render(request=request, template_name='ffxivws/snapshot.html.jinja', using='jinja', context=context)
 
 
@@ -105,8 +110,8 @@ def world_history(request: HttpRequest, world_name: str):
     while cd >= from_date:
         days.append((cd, WorldStateSummary.from_world_state_list(by_day[cd]) if (cd in by_day) else None))
         cd -= timedelta(days=1)
-    context = dict(days=days, world=world, from_date=from_date, today=today, timezones=TIMEZONES_LIST,
-                   current_tz=timezone.get_current_timezone_name())
+    context = dict(days=days, world=world, from_date=from_date, today=today)
+    context.update(timezone_ctx())
     return render(request=request, template_name='ffxivws/world.html.jinja', using='jinja', context=context)
 
 
