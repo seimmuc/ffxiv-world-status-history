@@ -37,7 +37,7 @@ CHAR_CREATION_ORD: dict[WorldState.CharCreation, int] = {e: i for i, e in enumer
 
 
 def timezone_ctx() -> dict[str, Any]:
-    return dict(timezones=TIMEZONES_LIST, current_tz=timezone.get_current_timezone_name())
+    return dict(timezones=TIMEZONES_LIST, current_tz=timezone.get_current_timezone())
 
 
 @require_safe
