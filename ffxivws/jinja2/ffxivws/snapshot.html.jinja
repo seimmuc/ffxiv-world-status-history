@@ -45,10 +45,11 @@
   });
 </script>
 {% endblock %}
-{% block title %}Snapshot view{% endblock %}
+{% block title %}Snapshot {{ snapshot.id }}{% endblock %}
 {% block body %}
 <body>
-  <h2>Snapshot {{ snapshot.timestamp }}</h2>
+  <h2 id="page-title">Snapshot {{ snapshot.id }}</h2>
+  <h3 id="page-subtitle"><time datetime="{{ snapshot.timestamp.isoformat() }}">{{ '{t:%I}:{t.minute} {t:%p} | {t:%b} {t.day} {t.year}'.format(t=snapshot.timestamp.astimezone(current_tz)) }}</time></h3>
   <header id="snapshot-header">
     <div id="select-regions">
      {% for region_name, _ in regions.items() %}
