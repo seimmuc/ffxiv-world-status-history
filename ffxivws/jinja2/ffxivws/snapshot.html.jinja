@@ -65,7 +65,7 @@
       <ul class="dc-list">
        {% for ws in dc %}
         <li>
-          <p class="world-name">{{ ws.world.name }}</p>
+          <p class="world-name"><a href="{{ url('world_history', kwargs={'world_name': ws.world.name}) }}">{{ ws.world.name }}</a></p>
           <div class="world-icon regular world-icon-status-{{ ws.status|string|lower }}" tooltip-text="{{ ws.get_status_display() }}"></div>
           <div class="world-icon regular world-icon-charcreate-{{ ws.char_creation|string }}" tooltip-text="{{ ws.get_char_creation_display() }}"></div>
           <div class="world-icon regular world-icon-classification-{{ ws.classification|string|lower }}" tooltip-text="{{ ws.get_classification_display() }}"></div>
