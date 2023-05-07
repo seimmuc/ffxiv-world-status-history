@@ -1,6 +1,8 @@
 {% extends "ffxivws/base.html.jinja" %}
 {% from 'ffxivws/common.html.jinja' import timezone_head, timezones_form %}
 
+{% set show_header_title, show_header_subtitle = true, true %}
+
 {% block head_extra %}
 {{- timezone_head() -}}
 <script>
@@ -45,18 +47,23 @@
   });
 </script>
 {% endblock %}
-{% block title %}Snapshot {{ snapshot.id }}{% endblock %}
-{% block body %}
-<body>
-  <h2 id="page-title">Snapshot {{ snapshot.id }}</h2>
-  <h3 id="page-subtitle"><time datetime="{{ snapshot.timestamp.isoformat() }}">{{ '{t:%I}:{t.minute} {t:%p} | {t:%b} {t.day} {t.year}'.format(t=snapshot.timestamp.astimezone(current_tz)) }}</time></h3>
-  <header id="snapshot-header">
-    <div id="select-regions">
-     {% for region_name, _ in regions.items() %}
-      <button class="region-toggle{% if region_name in regions_active %} on{% endif %}" region-name="{{ region_name }}">{{ region_name }}</button>
-     {% endfor %}
-    </div>
-  </header>
+
+{% block header_title %}{% block title %}Snapshot {{ snapshot.id }}{% endblock %}{% endblock %}
+
+{% block header_subtitle %}
+  <time datetime="{{ snapshot.timestamp.isoformat() }}">{{ '{t:%I}:{t.minute} {t:%p} | {t:%b} {t.day} {t.year}'.format(t=snapshot.timestamp.astimezone(current_tz)) }}</time>
+{% endblock %}
+
+{% block header_extra %}
+  <div id="select-regions">
+   {% for region_name, _ in regions.items() %}
+    <button class="region-toggle{% if region_name in regions_active %} on{% endif %}" region-name="{{ region_name }}">{{ region_name }}</button>
+   {% endfor %}
+  </div>
+  <noscript>Javascript must be enabled for buttons above to work</noscript>
+{% endblock %}
+
+{% block main %}
   <main id="snapshot-main">
    {% for reg_name, reg in regions.items() %}
    {% for dc_name, dc in reg.items() %}
@@ -80,5 +87,4 @@
   <footer id="footer">
     {{ timezones_form(csrf_input, timezones, current_tz, request.get_full_path()) }}
   </footer>
-</body>
 {% endblock %}

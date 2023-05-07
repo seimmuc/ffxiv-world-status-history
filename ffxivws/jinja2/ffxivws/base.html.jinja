@@ -12,6 +12,13 @@
   {% endblock %}
 </head>
 <body>
-  {% block body %}Nothing here{% endblock %}
+  {% block header %}
+  <header id="page-header">
+    {% if show_header_title %}<h2 id="header-title">{% block header_title %}{% endblock %}</h2>{% endif %}
+    {% if show_header_subtitle %}<h3 id="header-subtitle">{% block header_subtitle %}{% endblock %}</h3>{% endif %}
+    {% block header_extra %}{% endblock %}
+  </header>
+  {% endblock %}
+  {% block main required %}{% endblock %}
 </body>
 </html>

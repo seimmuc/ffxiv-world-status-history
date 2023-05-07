@@ -1,11 +1,14 @@
 {% extends "ffxivws/base.html.jinja" %}
 {% from 'ffxivws/common.html.jinja' import timezone_head, timezones_form %}
 
+{% set show_header_title = true %}
+
 {% block head_extra %}
   {{- timezone_head() -}}
 {% endblock %}
 
 {% block title %}World {{ world.name }}{% endblock %}
+{% block header_title %}{{ world.name }}{% endblock %}
 
 {% macro world_icon(icon_name, size, tooltip_text) -%}
   <div class="world-icon {{ size }} world-icon-{{ icon_name|lower }}"{% if tooltip_text %} tooltip-text="{{ tooltip_text }}"{% endif %}></div>
@@ -25,9 +28,7 @@
   {% endif %}
 {%- endmacro %}
 
-{% block body %}
-<body>
-  <h2 id="page-title">{{ world.name }}</h2>
+{% block main %}
   <main id="world-main">
     <div id="world-history-table">
       <table>
@@ -47,5 +48,4 @@
   <footer id="footer">
     {{ timezones_form(csrf_input, timezones, current_tz, request.get_full_path()) }}
   </footer>
-</body>
 {% endblock %}
