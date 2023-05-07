@@ -13,6 +13,10 @@ $(document).ready(function() {
     }
   );
   tooltipElems.mousemove(function(e) {
-    findChildTooltips(this).css('left', `${e.pageX}px`).css('top', `${e.pageY}px`)
+    const tooltip = findChildTooltips(this);
+    const body = $('body');
+    let x = Math.min(e.pageX, body.outerWidth(true) - tooltip.outerWidth(true));
+    let y = Math.min(e.pageY, body.outerHeight(true) - tooltip.outerHeight(true));
+    tooltip.css('left', `${x}px`).css('top', `${y}px`);
   });
 });
