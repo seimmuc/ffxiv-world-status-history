@@ -1,5 +1,5 @@
 div.tooltip {
-  position: absolute;
+  position: fixed;
   width: auto;
   height: auto;
   z-index: 50;
