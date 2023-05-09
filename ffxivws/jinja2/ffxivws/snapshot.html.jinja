@@ -51,7 +51,7 @@
 {% block header_title %}{% block title %}Snapshot {{ snapshot.id }}{% endblock %}{% endblock %}
 
 {% block header_subtitle %}
-  <time datetime="{{ snapshot.timestamp.isoformat() }}">{{ '{t:%I}:{t.minute} {t:%p} | {t:%b} {t.day} {t.year}'.format(t=snapshot.timestamp.astimezone(current_tz)) }}</time>
+  <time datetime="{{ snapshot.timestamp.isoformat() }}">{{ '{t:%I}:{t:%M} {t:%p} | {t:%b} {t.day} {t.year}'.format(t=snapshot.timestamp.astimezone(current_tz)) }}</time>
 {% endblock %}
 
 {% block header_extra %}

@@ -82,17 +82,17 @@
 {%- endmacro %}
 
 {% macro icons_from_summary(summary, attr_name) -%}
-  {% if summary is none %}
+  {% if summary is none -%}
     {{ world_icon(attr_name + '-unknown', 'regular', 'No data') }}
-  {% elif summary[attr_name]|length == 1 %}
+  {%- elif summary[attr_name]|length == 1 -%}
     {{ world_icon(attr_name + '-' + (summary[attr_name]|first).value|string, 'regular', (summary[attr_name]|first).label) }}
-  {% else %}
+  {%- else -%}
     <div class="world-icon-grid" tooltip-text="{% for val in summary[attr_name] %}{{ val.label + ('' if loop.last else '<br>') }}{% endfor %}">
      {% for val in summary[attr_name] %}
       {{ world_icon('{}-{}'.format(attr_name, val), 'small') }}
      {% endfor %}
     </div>
-  {% endif %}
+  {%- endif %}
 {%- endmacro %}
 
 {% block main %}
