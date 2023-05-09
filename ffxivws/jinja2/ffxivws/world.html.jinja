@@ -4,7 +4,74 @@
 {% set show_header_title = true %}
 
 {% block head_extra %}
-  {{- timezone_head() -}}
+{{- timezone_head() -}}
+<script>
+  let snapshotsPopup = undefined;
+  let snapshotsPopupLink = undefined;
+  function openPopup(popupTag, parentTag, clickedLinkElem) {
+    parentTag.append(popupTag);
+    snapshotsPopup = popupTag;
+    snapshotsPopupLink = clickedLinkElem;
+  }
+  function closePopup() {
+    if (snapshotsPopup !== undefined) {
+      snapshotsPopup.remove();
+      snapshotsPopup = undefined;
+      snapshotsPopupLink = undefined;
+    }
+  }
+  $(document).ready(function() {
+    const snapsUrlBase = $('#world-history-table').attr('snaps-url');
+    const snapshotLinks = $('#world-history-table tr > td.snapshots > a.snapshots-link');
+    snapshotLinks.each(function() {
+      const linkTag = $(this);
+      const cellTag = linkTag.parent();
+      const snapshotIds = linkTag.attr('all-snapshots').split(',').filter(s => s.trim());
+      switch (snapshotIds.length) {
+        case 0:
+          break;
+        case 1:
+          break;
+        default:
+          linkTag.click(() => {
+            const existingPopup = $('.snapshot-list', cellTag);
+            if (existingPopup.length > 0) {
+              if (snapshotsPopup !== undefined && existingPopup.is(snapshotsPopup)) {
+                closePopup();
+              }
+              existingPopup.remove();
+            } else {
+              // Remove existing popup if there is one open
+              closePopup();
+              // Create new popup element
+              const newPopup = $('<ol class="snapshot-list"></ol>');
+              for (const sid of snapshotIds) {
+                newPopup.append($(`<li><a class="snapshots-link" href="${snapsUrlBase.replaceAll("12345", sid.toString())}">Snapshot ${sid}</a></li>`));
+              }
+              // Position the popup with CSS
+              const cellPos = cellTag.position();
+              newPopup.css({top: cellPos.top + cellTag.outerHeight(true), left: cellPos.left - 5});
+              // Add popup to the DOM and save the state
+              cellTag.append(newPopup);
+              snapshotsPopup = newPopup;
+              snapshotsPopupLink = this;
+            }
+          });
+          linkTag.removeAttr('href');
+          linkTag.addClass('js-btn');
+      }
+    });
+    $(window).click(event => {
+      if (snapshotsPopup === undefined) {
+        return;
+      }
+      const popupDOM = snapshotsPopup[0];
+      if (event.target !== popupDOM && event.target !== snapshotsPopupLink && !$.contains(popupDOM, event.target)) {
+        closePopup();
+      }
+    });
+  });
+</script>
 {% endblock %}
 
 {% block title %}World {{ world.name }}{% endblock %}
@@ -30,12 +97,18 @@
 
 {% block main %}
   <main id="world-main">
-    <div id="world-history-table">
+    <div id="world-history-table" snaps-url="{{ url('snapshot_details', kwargs={'snap_id': 12345}) }}">
       <table>
        {% for day, summary in days %}
         <tr class="world-history-row{% if day == today %} today{% endif %}">
-          <td class="day">{% if day == today %}Today{% else %}{{ day.strftime('%x') }}{% endif %}</td>
-          <td tooltip-text="{% if summary.snapshot_count == 1 %}1 snapshot{% else %}{{ summary.snapshot_count or 0 }} snapshots{% endif %}">{{ summary.snapshot_count or 0 }}</td>
+          <td class="day"><time datetime="{{ day.isoformat() }}">{% if day == today %}Today{% else %}{{ '{t:%b} {t.day}'.format(t=day) }}{% endif %}</time></td>
+          <td class="snapshots">
+            <a class="snapshots-link"
+              {%- if summary.snapshots|length > 0 %} href="{{ url('snapshot_details', kwargs={'snap_id': (summary.snapshots|first).snapshot.id}) }}"{% endif %} {# -#}
+              tooltip-text="{% if summary.snapshots|length == 1 %}Snapshot {{ (summary.snapshots|first).snapshot.id }}{% else %}{{ summary.snapshots|length or 'No' }} snapshots{% endif %}" {# -#}
+              all-snapshots="{{ summary.snapshots|map(attribute='snapshot.id')|join(',') }}"{# -#}
+            >{{ summary.snapshots|length or 0 }}</a>
+          </td>
           <td>{{ icons_from_summary(summary, 'status') }}</td>
           <td>{{ icons_from_summary(summary, 'classification') }}</td>
           <td>{{ icons_from_summary(summary, 'charcreate') }}</td>

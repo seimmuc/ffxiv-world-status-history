@@ -208,13 +208,14 @@ section.snapshot-dc-block .world-name > a:visited {
   padding: 15px 10px;
 }
 #world-history-table {
+  position: relative;
+}
+#world-history-table table {
+  border-collapse: collapse;
   border: 1px solid #0005;
   border-radius: 10px;
   overflow: hidden;
   width: max-content;
-}
-#world-history-table table {
-  border-collapse: collapse;
 }
 #world-history-table tr:not(:last-of-type) {
   border-bottom: 1px solid #0005;
@@ -235,4 +236,36 @@ section.snapshot-dc-block .world-name > a:visited {
 #world-history-table tr > td.day {
   padding-left: 12px;
   padding-right: 10px;
+}
+#world-history-table tr > td.snapshots {
+  padding: 0px;
+}
+#world-history-table tr > td.snapshots > a.snapshots-link {
+  padding: 5px;
+  border-radius: 5px;
+}
+#world-history-table tr > td.snapshots > a.snapshots-link[href]:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+#world-history-table tr > td.snapshots > a.snapshots-link.js-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+}
+#world-history-table tr > td.snapshots a.snapshots-link {
+  text-decoration: none;
+  color: #ebebd9;
+  user-select: none;
+}
+#world-history-table tr > td.snapshots a.snapshots-link:visited {
+  color: #d9ebea;
+}
+#world-history-table tr > td.snapshots > ol.snapshot-list {
+  position: absolute;
+  z-index: 10;
+  width: max-content;
+  list-style: none;
+  padding: 5px 10px;
+  margin: 0;
+  background-color: #525252;
+  border-radius: 6px;
 }

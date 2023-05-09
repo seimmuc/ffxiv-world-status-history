@@ -73,14 +73,14 @@ class WorldStateSummary(NamedTuple):
     # noinspection SpellCheckingInspection
     # because I don't want underscores in CSS and can't use dashes here
     charcreate: List[WorldState.CharCreation]
-    snapshot_count: int
+    snapshots: List[WorldState]
 
     @classmethod
     def from_world_state_list(cls, wsl: list[WorldState]) -> 'WorldStateSummary':
         st = cls._sorted_enum_list((ws.status for ws in wsl), STATUS_ENUM, STATUS_ORD)
         cl = cls._sorted_enum_list((ws.classification for ws in wsl), CLASSIFICATIONS_ENUM, CLASSIFICATIONS_ORD)
         cc = cls._sorted_enum_list((ws.char_creation for ws in wsl), CHAR_CREATION_ENUM, CHAR_CREATION_ORD)
-        return cls(status=st, classification=cl, charcreate=cc, snapshot_count=len(wsl))
+        return cls(status=st, classification=cl, charcreate=cc, snapshots=wsl)
 
     T = TypeVar('T', bound=Choices)
 
