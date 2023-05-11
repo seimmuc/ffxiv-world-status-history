@@ -15,8 +15,8 @@ $(document).ready(function() {
   tooltipElems.mousemove(function(e) {
     const tooltip = findChildTooltips(this);
     const body = $('body');
-    let x = Math.min(e.pageX, body.outerWidth(true) - tooltip.outerWidth(true));
-    let y = Math.min(e.pageY, body.outerHeight(true) - tooltip.outerHeight(true));
+    let x = Math.min(e.clientX, body.outerWidth(true) - tooltip.outerWidth(true));
+    let y = Math.min(e.clientY, body.outerHeight(true) - tooltip.outerHeight(true));
     tooltip.css('left', `${x}px`).css('top', `${y}px`);
   });
 });
