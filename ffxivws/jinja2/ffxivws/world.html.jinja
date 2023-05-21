@@ -6,67 +6,79 @@
 {% block head_extra %}
 {{- timezone_head() -}}
 <script>
-  let snapshotsPopup = undefined;
-  let snapshotsPopupLink = undefined;
-  function openPopup(popupTag, parentTag, clickedLinkElem) {
-    parentTag.append(popupTag);
-    snapshotsPopup = popupTag;
-    snapshotsPopupLink = clickedLinkElem;
+  let barBlockPopup = undefined;
+
+  function createPopup(date, snapshotIds, snapsUrlBase, blockTag) {
+    const newPopup = $(`<div class="details-popup"><p class="details-date">${date.toLocaleDateString()}</p></div>`);
+    const snapsList = $('<ol class="snapshot-list"></ol>');
+    if (snapshotIds.length) {
+      for (const sid of snapshotIds) {
+        snapsList.append($(`<li><a class="snapshots-link" href="${snapsUrlBase.replaceAll("12345", sid.toString())}">Snapshot ${sid}</a></li>`));
+      }
+    } else {
+      snapsList.append($('<li>No snapshots</li>'))
+    }
+    snapsList.appendTo(newPopup);
+    // Position the popup with CSS
+    const blockPos = blockTag.position();
+    newPopup.css({top: blockPos.top + blockTag.outerHeight(true), left: blockPos.left - 5});
+    return newPopup;
+  }
+  function openPopup(popupTag, blockTag, click) {
+    if (blockTag.hasClass('today')) {
+      blockTag.css('transform', 'none');  // Transform breaks position and z-index for some reason
+    }
+    blockTag.append(popupTag);
+    barBlockPopup = {popupTag: popupTag, parentTag: blockTag, click: click};
   }
   function closePopup() {
-    if (snapshotsPopup !== undefined) {
-      snapshotsPopup.remove();
-      snapshotsPopup = undefined;
-      snapshotsPopupLink = undefined;
+    if (barBlockPopup !== undefined) {
+      barBlockPopup.popupTag.remove();
+      if (barBlockPopup.parentTag.hasClass('today')) {
+        barBlockPopup.parentTag.css('transform', '');
+      }
+      barBlockPopup = undefined;
     }
   }
+  
   $(document).ready(function() {
-    const snapsUrlBase = $('#world-history-table').attr('snaps-url');
-    const snapshotLinks = $('#world-history-table tr > td.snapshots > a.snapshots-link');
-    snapshotLinks.each(function() {
-      const linkTag = $(this);
-      const cellTag = linkTag.parent();
-      const snapshotIds = linkTag.attr('all-snapshots').split(',').filter(s => s.trim());
-      switch (snapshotIds.length) {
-        case 0:
-          break;
-        case 1:
-          break;
-        default:
-          linkTag.click(() => {
-            const existingPopup = $('.snapshot-list', cellTag);
-            if (existingPopup.length > 0) {
-              if (snapshotsPopup !== undefined && existingPopup.is(snapshotsPopup)) {
-                closePopup();
-              }
-              existingPopup.remove();
-            } else {
-              // Remove existing popup if there is one open
-              closePopup();
-              // Create new popup element
-              const newPopup = $('<ol class="snapshot-list"></ol>');
-              for (const sid of snapshotIds) {
-                newPopup.append($(`<li><a class="snapshots-link" href="${snapsUrlBase.replaceAll("12345", sid.toString())}">Snapshot ${sid}</a></li>`));
-              }
-              // Position the popup with CSS
-              const cellPos = cellTag.position();
-              newPopup.css({top: cellPos.top + cellTag.outerHeight(true), left: cellPos.left - 5});
-              // Add popup to the DOM and save the state
-              cellTag.append(newPopup);
-              snapshotsPopup = newPopup;
-              snapshotsPopupLink = this;
-            }
-          });
-          linkTag.removeAttr('href');
-          linkTag.addClass('js-btn');
-      }
+    const snapsUrlBase = $('.history-bars-wrapper').attr('snaps-url');
+    const barBlocks = $('.history-bars-wrapper ol.history-bar > li.history-bar-line');
+    barBlocks.each(function() {
+      const blockTag = $(this);
+      const snapshotIds = blockTag.attr('all-snapshots').split(',').filter(s => s.trim());
+      const date = new Date(blockTag.attr('day'));
+      blockTag.click((e) => {
+        // If clicked inside child popup, ignore click
+        if (!blockTag.is(e.target) && $(e.target).parentsUntil(blockTag).is(function() {return this.classList.contains('details-popup');})) {
+          return;
+        }
+        // Find existing child popup, if any
+        const existingPopup = $('.details-popup', blockTag);
+        if (existingPopup.length > 0) {
+          if (barBlockPopup !== undefined && existingPopup.is(barBlockPopup.popupTag)) {
+            closePopup();
+          }
+          existingPopup.remove();
+        } else {
+          // Remove existing popup if there is one open
+          closePopup();
+          // Create new popup element
+          const newPopup = createPopup(date, snapshotIds, snapsUrlBase, blockTag);
+          // Add popup to the DOM and save the state
+          openPopup(newPopup, blockTag, true);
+        }
+      });
+      blockTag.removeAttr('all-snapshots');
+      blockTag.removeAttr('day');
     });
     $(window).click(event => {
-      if (snapshotsPopup === undefined) {
+      if (barBlockPopup === undefined) {
         return;
       }
-      const popupDOM = snapshotsPopup[0];
-      if (event.target !== popupDOM && event.target !== snapshotsPopupLink && !$.contains(popupDOM, event.target)) {
+      const popupDOM = barBlockPopup.popupTag[0];
+      const parentDOM = barBlockPopup.parentTag[0];
+      if (event.target !== popupDOM && event.target !== parentDOM && !$.contains(popupDOM, event.target) && !$.contains(parentDOM, event.target)) {
         closePopup();
       }
     });
@@ -77,44 +89,50 @@
 {% block title %}World {{ world.name }}{% endblock %}
 {% block header_title %}{{ world.name }}{% endblock %}
 
-{% macro world_icon(icon_name, size, tooltip_text) -%}
-  <div class="world-icon {{ size }} world-icon-{{ icon_name|lower }}"{% if tooltip_text %} tooltip-text="{{ tooltip_text }}"{% endif %}></div>
+{% macro bar_line_data(summary, attr_name, day) -%}
+  day="{{ day }}" all-snapshots="{{ summary.snapshots|map(attribute='snapshot.id')|join(',') }}"
 {%- endmacro %}
 
-{% macro icons_from_summary(summary, attr_name) -%}
+{% macro bar_line(summary, attr_name, day) %}
   {% if summary is none -%}
-    {{ world_icon(attr_name + '-unknown', 'regular', 'No data') }}
+    <li class="history-bar-line{% if day == today %} today{% endif %} barcol-{{ attr_name }}-unknown" {{ bar_line_data(summary, attr_name, day) }}></li>
   {%- elif summary[attr_name]|length == 1 -%}
-    {{ world_icon(attr_name + '-' + (summary[attr_name]|first).value|string, 'regular', (summary[attr_name]|first).label) }}
+    <li class="history-bar-line{% if day == today %} today{% endif %} barcol-{{ attr_name }}-{{ (summary[attr_name]|first).value|string|lower }}" {{ bar_line_data(summary, attr_name, day) }}></li>
   {%- else -%}
-    <div class="world-icon-grid" tooltip-text="{% for val in summary[attr_name] %}{{ val.label + ('' if loop.last else '<br>') }}{% endfor %}">
+    <li class="history-bar-line{% if day == today %} today{% endif %} split" {{ bar_line_data(summary, attr_name, day) }}>
      {% for val in summary[attr_name] %}
-      {{ world_icon('{}-{}'.format(attr_name, val), 'small') }}
+      <div class="barcol-{{ attr_name }}-{{ val.value|string|lower }}"></div>
      {% endfor %}
-    </div>
+    </li>
   {%- endif %}
-{%- endmacro %}
+{% endmacro %}
+
+{% macro history_bar(attr_name, label) %}
+  <span class="history-bar-label">{{ label }}</span>
+  <ol class="history-bar {{ attr_name }}">
+   {% for day, summary in days %}
+    {{ bar_line(summary, attr_name, day) }}
+   {% endfor %}
+  </ol>
+{% endmacro %}
 
 {% block main %}
   <main id="world-main">
-    <div id="world-history-table" snaps-url="{{ url('snapshot_details', kwargs={'snap_id': 12345}) }}">
-      <table>
-       {% for day, summary in days %}
-        <tr class="world-history-row{% if day == today %} today{% endif %}">
-          <td class="day"><time datetime="{{ day.isoformat() }}">{% if day == today %}Today{% else %}{{ '{t:%b} {t.day}'.format(t=day) }}{% endif %}</time></td>
-          <td class="snapshots">
-            <a class="snapshots-link"
-              {%- if summary.snapshots|length > 0 %} href="{{ url('snapshot_details', kwargs={'snap_id': (summary.snapshots|first).snapshot.id}) }}"{% endif %} {# -#}
-              tooltip-text="{% if summary.snapshots|length == 1 %}Snapshot {{ (summary.snapshots|first).snapshot.id }}{% else %}{{ summary.snapshots|length or 'No' }} snapshots{% endif %}" {# -#}
-              all-snapshots="{{ summary.snapshots|map(attribute='snapshot.id')|join(',') }}"{# -#}
-            >{{ summary.snapshots|length or 0 }}</a>
-          </td>
-          <td>{{ icons_from_summary(summary, 'status') }}</td>
-          <td>{{ icons_from_summary(summary, 'classification') }}</td>
-          <td>{{ icons_from_summary(summary, 'charcreate') }}</td>
-        </tr>
-       {% endfor %}
-      </table>
+    <div class="history-bars-wrapper
+        {%- if days|length < 9 %} week
+        {%- elif days|length < 16 %} twoweek
+        {%- elif days|length < 32 %} month
+        {%- else %} multmonth
+        {%- endif -%}
+    " snaps-url="{{ url('snapshot_details', kwargs={'snap_id': 12345}) }}">
+      {{ history_bar('status', 'Status') }}
+      {{ history_bar('classification', 'Classification') }}
+      {{ history_bar('charcreate', 'Character creation') }}
+      <div class="date-range">
+        <p>Today</p>
+        <div class="spacer"></div>
+        <p>{{ days|length - 1 }} days ago</p>
+      </div>
     </div>
   </main>
 
