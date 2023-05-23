@@ -71,7 +71,7 @@ body {
 .world-icon.world-icon-status-mtf {
   background-image: url(/static/icons/status_maintenancefull.svg);
 }
-.world-icon.world-icon-status-unknown {
+.world-icon.world-icon-status-unknown, .world-icon.world-icon-status-unk {
   background-image: url(/static/icons/status_unknown.svg);
 }
 .world-icon.world-icon-classification-st {
@@ -86,7 +86,7 @@ body {
 .world-icon.world-icon-classification-cg {
   background-image: url(/static/icons/classif_congested.svg);
 }
-.world-icon.world-icon-classification-unknown {
+.world-icon.world-icon-classification-unknown, .world-icon.world-icon-classification-uk {
   background-image: url(/static/icons/classif_unknown.svg);
 }
 .world-icon.world-icon-charcreate-1 {
@@ -95,7 +95,7 @@ body {
 .world-icon.world-icon-charcreate-0 {
   background-image: url(/static/icons/charcr_unavailable.svg);
 }
-.world-icon.world-icon-charcreate-unknown {
+.world-icon.world-icon-charcreate-unknown, .world-icon.world-icon-charcreate--1 {
   background-image: url(/static/icons/charcr_unknown.svg);
 }
 
@@ -342,7 +342,10 @@ section.snapshot-dc-block .world-name > a:visited {
   background-color: #ad6ed4;
 }
 .barcol-status-unknown,
+.barcol-status-unk,
 .barcol-classification-unknown,
-.barcol-charcreate-unknown {
+.barcol-classification-uk,
+.barcol-charcreate-unknown,
+.barcol-charcreate--1 {
   background-color: #a8a8a8;
 }

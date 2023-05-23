@@ -15,9 +15,9 @@ class FwsHTMLParseError(RuntimeError):
 
 
 @transaction.atomic
-def run_snapshot(text=None, manual=False):
+def run_snapshot(text=None, http_code=None, manual=False):
     if text is None:
-        text = fetch_data()
+        text, http_code = fetch_data()
 
     wqs: QuerySet[World] = World.objects.all()
     worlds: Dict[str, World] = {w.name.lower(): w for w in wqs}
@@ -28,33 +28,50 @@ def run_snapshot(text=None, manual=False):
             logfile=False
     )
 
-    log = ''
-    ws_count = 0
-    fail_count = 0
-    for world_tag, dc_name in iter_worlds(text):
-        try:
-            w_state = parse_world_state(w_tag=world_tag, snapshot=s, worlds=worlds)
+    if http_code == 200:
+        log = ''
+        ws_count = 0
+        fail_count = 0
+        for world_tag, dc_name in iter_worlds(text):
+            try:
+                w_state = parse_world_state(w_tag=world_tag, snapshot=s, worlds=worlds)
+                w_state.save()
+                ws_count += 1
+            except (FwsHTMLParseError, KeyError) as e:
+                log += f'encountered {type(e).__name__} while getting world state:' \
+                       f'\n=====\n{world_tag.prettify()}=====\n\n'
+                fail_count += 1
+        if fail_count:
+            log += f'\nfailed to save {fail_count} world states, ({ws_count} succeeded)\n'
+            s.result = 'Error'
+            s.logfile = True
+            with Path(s.get_logfile_name()).open('wt', encoding='utf8') as f:
+                f.write(log)
+        else:
+            s.result = 'Success'
+        s.save()
+    elif http_code == 503:
+        if not is_service_unavailable_page(text):
+            raise FwsHTMLParseError('Got a 503 page that does not seem to be a full maintenance page')
+        for world in worlds.values():
+            w_state = WorldState(
+                    snapshot=s,
+                    world=world,
+                    status=WorldState.Status.MAINTENANCE_FULL,
+                    classification=WorldState.Classification.UNKNOWN,
+                    char_creation=WorldState.CharCreation.UNKNOWN
+            )
             w_state.save()
-            ws_count += 1
-        except (FwsHTMLParseError, KeyError) as e:
-            log += f'encountered {type(e).__name__} while getting world state:\n=====\n{world_tag.prettify()}=====\n\n'
-            fail_count += 1
-
-    if fail_count:
-        log += f'\nfailed to save {fail_count} world states, ({ws_count} succeeded)\n'
-        s.result = 'Error'
-        s.logfile = True
-        with Path(s.get_logfile_name()).open('wt', encoding='utf8') as f:
-            f.write(log)
-    else:
-        s.result = 'Success'
-    s.save()
+        s.result = 'StatusServiceUnavailable'
+        s.save()
+        return
 
 
-def fetch_data() -> str:
+def fetch_data() -> tuple[str, int]:
     response = requests.get('https://na.finalfantasyxiv.com/lodestone/worldstatus/')
-    response.raise_for_status()
-    return response.text
+    if response.status_code not in (200, 503):
+        response.raise_for_status()
+    return response.text, response.status_code
 
 
 def iter_worlds(page_html: str) -> Iterator[Tuple[Tag, str]]:
@@ -123,3 +140,14 @@ def parse_world_state(w_tag: Tag, snapshot: Snapshot, worlds: Dict[str, World]) 
             char_creation=parse_char_creation(w_tag.select_one('div.world-list__create_character > i'))
     )
     return ws
+
+
+def is_service_unavailable_page(text: str) -> bool:
+    soup = BeautifulSoup(text, features='html.parser')
+    msg_box_tag = soup.select_one('body > div.error__bg > div.ldst__window.ldst__maintenance')
+    if msg_box_tag is None:
+        return False
+    h1_tag = msg_box_tag.select_one('h1.maintenance__heading')
+    p_tag = msg_box_tag.select_one('p.maintenance__text')
+    return h1_tag is not None and h1_tag.text == 'Maintenance' and p_tag is not None \
+        and 'Due to ongoing maintenance, this page is currently unavailable. Please try again later.' in p_tag.text

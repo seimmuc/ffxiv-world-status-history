@@ -10,7 +10,7 @@ class Snapshot(models.Model):
 
     type = models.CharField(max_length=1, choices=Type.choices)
     timestamp = models.DateTimeField('state capture time')
-    result = models.CharField(verbose_name='fetch result', max_length=10)
+    result = models.CharField(verbose_name='fetch result', max_length=30)
     logfile = models.BooleanField(verbose_name='has error log')
 
     def get_logfile_name(self) -> str | None:
@@ -49,16 +49,19 @@ class WorldState(models.Model):
         ONLINE = 'ONL', _('Online')
         MAINTENANCE_PARTIAL = 'MTP', _('Partial Maintenance')
         MAINTENANCE_FULL = 'MTF', _('Maintenance')
+        UNKNOWN = 'UNK', _('Unknown')
 
     class Classification(models.TextChoices):
         STANDARD = 'ST', _('Standard')
         NEW = 'NW', _('New')
         PREFERRED = 'PF', _('Preferred')
         CONGESTED = 'CG', _('Congested')
+        UNKNOWN = 'UK', _('Unknown')
 
     class CharCreation(models.IntegerChoices):
         ALLOWED = 1, _('Character creation available')
         PROHIBITED = 0, _('Character creation unavailable')
+        UNKNOWN = -1, _('Character creation unknown')
 
     snapshot = models.ForeignKey(Snapshot, on_delete=models.CASCADE)
     world = models.ForeignKey(World, null=True, on_delete=models.SET_NULL)
