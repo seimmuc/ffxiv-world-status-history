@@ -98,7 +98,7 @@ def world_history(request: HttpRequest, world_name: str):
     except World.DoesNotExist:
         return HttpResponse(b'World not found', status=404, content_type='text/plain')
     try:
-        history_length = int(request.GET.get('days', 7))
+        history_length = max(min(int(request.GET.get('days', 7)), 180), 0)
     except ValueError:
         history_length = 7
     today = timezone.localdate()
