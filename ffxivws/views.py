@@ -1,7 +1,7 @@
 import zoneinfo
 from datetime import datetime, date, time, timedelta
 from itertools import chain
-from typing import Callable, TypeVar, NamedTuple, List, Iterator, Any
+from typing import TypeVar, NamedTuple, List, Iterator, Any
 
 from django.db.models import QuerySet, Choices
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_safe, require_POST
 
 from ffxivws.models import Snapshot, WorldState, DataCenter, Region, World
+from ffxivws.utils import get_or_add_to_dict
 
 
 def index(request: HttpRequest):
@@ -49,8 +50,8 @@ def snapshot_details(request: HttpRequest, snap_id: int):
     for ws in s.worldstate_set.all():   # type: WorldState
         dc: DataCenter = ws.world.data_center
         region: Region = dc.region
-        _get_or_add(
-                d=_get_or_add(d=regions, key=region.name, default_factory=dict),
+        get_or_add_to_dict(
+                d=get_or_add_to_dict(d=regions, key=region.name, default_factory=dict),
                 key=dc.name,
                 default_factory=list
         ).append(ws)
@@ -107,7 +108,7 @@ def world_history(request: HttpRequest, world_name: str):
     states: QuerySet[WorldState] = WorldState.objects.filter(world=world, snapshot__timestamp__gte=from_time)
     by_day: dict[date, list[WorldState]] = {}
     for state in states:
-        _get_or_add(d=by_day, key=timezone.localdate(state.snapshot.timestamp), default_factory=list).append(state)
+        get_or_add_to_dict(d=by_day, key=timezone.localdate(state.snapshot.timestamp), default_factory=list).append(state)
     days: list[tuple[date, WorldStateSummary | None]] = []
     cd: date = today
     while cd >= from_date:
@@ -127,13 +128,3 @@ def set_timezone(request: HttpRequest):
     return HttpResponseRedirect(redirect_to=redirect_to, status=303)
 
 
-K = TypeVar('K')
-V = TypeVar('V')
-
-
-def _get_or_add(d: dict[K, V], key: K, default_factory: Callable[[], V]) -> V:
-    if key in d:
-        return d[key]
-    v = default_factory()
-    d[key] = v
-    return v
