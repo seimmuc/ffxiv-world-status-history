@@ -117,12 +117,18 @@ def parse_world_status(status_tag: Tag) -> WorldState.Status:
 
 def parse_classification(class_tag: Tag) -> WorldState.Classification:
     c_text = class_tag.text.upper()
+    if c_text == '--':
+        return WorldState.Classification.UNKNOWN
     if c_text not in WorldState.Classification.names:
         raise FwsHTMLParseError(f'Unknown world classification: tag={c_text}')
     return WorldState.Classification[c_text]
 
 
 def parse_char_creation(cc_tag: Tag) -> WorldState.CharCreation:
+    pt = cc_tag.findChild(name='p')
+    if pt is not None and pt.text == '--':
+        return WorldState.CharCreation.UNKNOWN
+    cc_tag = cc_tag.findChild(name='i')
     cc = find_class_in_tag(cc_tag, char_create_classes)
     if cc is None:
         raise FwsHTMLParseError(f'Unknown character creation state: tag="{cc_tag}"')
@@ -137,7 +143,7 @@ def parse_world_state(w_tag: Tag, snapshot: Snapshot, worlds: Dict[str, World]) 
             world=w,
             status=parse_world_status(status_tag=w_tag.select_one('div.world-list__status_icon > i')),
             classification=parse_classification(w_tag.select_one('div.world-list__world_category > p')),
-            char_creation=parse_char_creation(w_tag.select_one('div.world-list__create_character > i'))
+            char_creation=parse_char_creation(w_tag.select_one('div.world-list__create_character'))
     )
     return ws
 
