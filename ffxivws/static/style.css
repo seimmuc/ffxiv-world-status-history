@@ -39,6 +39,20 @@ body {
   padding-left: 9px;
 }
 
+a.button {
+  display: inline-block;
+  padding: 8px 15px;
+  text-align: center;
+  text-decoration: none;
+  color: #f2f2f2;
+  background-color: #666;
+  border-radius: 5px;
+  transition: background-color 0.25s;
+}
+a.button:hover {
+  background-color: #777;
+}
+
 /* World icon styles */
 /* icon palette: https://coolors.co/7acc52-ad6ed4-4b8ad2-ccb233-d97777-a8a8a8 */
 
@@ -208,12 +222,18 @@ section.snapshot-dc-block .world-name > a:visited {
   padding: 15px 10px;
 }
 
+#days-range-buttons a.button.current {
+  pointer-events: none;
+  cursor: default;
+  background-color: #555;
+}
+
 .history-bars-wrapper {
   display: grid;
   align-items: center;
   border: solid 2px #777;
   border-radius: 8px;
-  padding: 5px 4px;
+  padding: 5px 7px;
   grid-template-columns: auto 1fr;
   width: 100%;
   max-width: 1400px;
@@ -255,7 +275,8 @@ section.snapshot-dc-block .world-name > a:visited {
 .history-bars-wrapper ol.history-bar > li.history-bar-line.today {
   overflow: hidden;
   border-radius: 5px;
-  transform: scaleY(90%);
+  height: 90%;
+  align-self: center;
 }
 .history-bars-wrapper ol.history-bar > li.history-bar-line.split {
   display: flex;

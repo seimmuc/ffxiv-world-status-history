@@ -35,6 +35,7 @@ CLASSIFICATIONS_ENUM: dict[str, WorldState.Classification] = {e.value: e for e i
 CLASSIFICATIONS_ORD: dict[WorldState.Classification, int] = {e: i for i, e in enumerate(WorldState.Classification)}
 CHAR_CREATION_ENUM: dict[str, WorldState.CharCreation] = {e.value: e for e in WorldState.CharCreation}
 CHAR_CREATION_ORD: dict[WorldState.CharCreation, int] = {e: i for i, e in enumerate(WorldState.CharCreation)}
+DAYS_OPTIONS = [('Week', 7), ('2 Weeks', 14), ('Month', 30), ('90 Days', 90)]
 
 
 def timezone_ctx() -> dict[str, Any]:
@@ -114,7 +115,7 @@ def world_history(request: HttpRequest, world_name: str):
     while cd >= from_date:
         days.append((cd, WorldStateSummary.from_world_state_list(by_day[cd]) if (cd in by_day) else None))
         cd -= timedelta(days=1)
-    context = dict(days=days, world=world, from_date=from_date, today=today)
+    context = dict(days=days, world=world, from_date=from_date, today=today, days_opt=DAYS_OPTIONS)
     context.update(timezone_ctx())
     return render(request=request, template_name='ffxivws/world.html.jinja', using='jinja', context=context)
 

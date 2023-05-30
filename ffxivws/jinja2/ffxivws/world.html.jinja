@@ -40,7 +40,7 @@
       barBlockPopup = undefined;
     }
   }
-  
+
   $(document).ready(function() {
     const snapsUrlBase = $('.history-bars-wrapper').attr('snaps-url');
     const barBlocks = $('.history-bars-wrapper ol.history-bar > li.history-bar-line');
@@ -88,6 +88,14 @@
 
 {% block title %}World {{ world.name }}{% endblock %}
 {% block header_title %}{{ world.name }}{% endblock %}
+
+{% block header_extra %}
+  <div id="days-range-buttons">
+   {% for bname, dc in days_opt %}
+    <a class="button{% if days|length - 1 == dc %} current{% endif %}" href="{{ '{u}?days={dc}'.format(u=url('world_history', kwargs={'world_name': world.name}), dc=dc) }}">{{ bname }}</a>
+   {% endfor %}
+  </div>
+{% endblock %}
 
 {% macro bar_line_data(summary, attr_name, day) -%}
   day="{{ day }}" all-snapshots="{{ summary.snapshots|map(attribute='snapshot.id')|join(',') }}"
