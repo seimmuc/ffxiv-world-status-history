@@ -12,6 +12,11 @@
   {% endblock %}
 </head>
 <body>
+  {% block navbar %}
+  {% if navbar %}
+  {% include 'ffxivws/navbar.html.jinja' %}
+  {% endif %}
+  {% endblock %}
   {% block header %}
   <header id="page-header">
     {% if show_header_title %}<h2 id="header-title">{% block header_title %}{% endblock %}</h2>{% endif %}

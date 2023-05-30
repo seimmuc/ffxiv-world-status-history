@@ -4,6 +4,7 @@ body {
   background-color: #444;
   color: #eee;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  margin: 0;
 }
 
 #page-header {
@@ -51,6 +52,122 @@ a.button {
 }
 a.button:hover {
   background-color: #777;
+}
+
+/* Navbar */
+
+#navbar {
+  background-color: #222;
+  z-index: 5;
+}
+#navbar ul.navmenu {
+  display: none;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  list-style-type: none;
+  margin: 0;
+  background-color: #222;
+}
+#navbar ul.navmenu.horizontal {
+  flex-direction: row;
+  padding: 0 3px;
+}
+#navbar ul.navmenu.vertical {
+  flex-direction: column;
+  padding: 1px 2px;
+}
+#navbar ul.navmenu.root,
+#navbar li.dropdown:hover > ul.navmenu,
+#navbar li.dropright:hover > ul.navmenu {
+  display: flex;
+}
+#navbar ul.navmenu.root {
+  padding-left: 30px;
+}
+#navbar ul.navmenu.horizontal > li.navbar-item.dropdown > ul.navmenu {
+  top: calc(100% - 1px);
+  left: -6px;
+}
+#navbar ul.navmenu.vertical > li.navbar-item.dropright > ul.navmenu {
+  top: 0px;
+  left: calc(100% - 1px);
+}
+#navbar li.dropdown,
+#navbar li.dropright {
+  position: relative;
+}
+#navbar ul.navmenu:not(.root) {
+  position: absolute;
+  border: #999 solid 1px;
+  padding-top: 3px;
+  padding-bottom: 5px;
+}
+#navbar ul.navmenu > li.navbar-item {
+  padding: 0 0px;
+  margin: 0 0px;
+  user-select: none;
+  cursor: default;
+  font-size: 1.45rem;
+  white-space: nowrap;
+  user-select: none;
+  color: #ddd;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+#navbar ul.navmenu > li.navbar-item.current {
+  background-color: #abf3;
+}
+#navbar ul.navmenu > li.navbar-item.separator {
+  height: 2px;
+  margin-top: 0.3em;
+  margin-bottom: 0.2em;
+  margin-right: 8px;
+  margin-left: 8px;
+  background-color: #999;
+}
+#navbar ul.navmenu > li.navbar-item.text {
+  color: #6b6;
+}
+#navbar ul.navmenu > li.navbar-item.text > a {
+  padding: 2px 4px;
+}
+#navbar ul.navmenu > li.navbar-item.button > a,
+#navbar ul.navmenu > li.navbar-item.dropdown > a,
+#navbar ul.navmenu > li.navbar-item.dropright > a {
+  padding: 0 7px;
+}
+#navbar ul.navmenu > li.navbar-item.button > a:hover,
+#navbar ul.navmenu > li.navbar-item.dropdown:hover,
+#navbar ul.navmenu > li.navbar-item.dropright:hover {
+  background-color: #fcc3;
+}
+#navbar ul.navmenu > li.navbar-item.button > a {
+  text-decoration: none;
+  flex-grow: 1;
+}
+#navbar ul.navmenu > li.navbar-item.button > a[href] {
+  color: #ebebd9;
+}
+#navbar ul.navmenu > li.navbar-item.button > a:visited {
+  color: #d9ebea;
+}
+#navbar li.dropdown::after, #navbar li.dropright::after {
+  font-size: 0.4em;
+  align-self: flex-end;
+  margin-inline-start: -2px;
+  padding-inline-end: 5px;
+  padding-block-end: 4px;
+}
+#navbar li.dropdown::after {
+  content: '▼'; /* ▼, ᐁ, ᐯ */
+}
+#navbar li.dropright::after {
+  content: '❱';
+  align-self: center;
 }
 
 /* World icon styles */

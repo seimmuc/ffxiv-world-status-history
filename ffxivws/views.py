@@ -1,4 +1,5 @@
 import zoneinfo
+from dataclasses import dataclass
 from datetime import datetime, date, time, timedelta
 from itertools import chain
 from typing import TypeVar, NamedTuple, List, Iterator, Any
@@ -6,6 +7,7 @@ from typing import TypeVar, NamedTuple, List, Iterator, Any
 from django.db.models import QuerySet, Choices
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_safe, require_POST
 
@@ -38,8 +40,83 @@ CHAR_CREATION_ORD: dict[WorldState.CharCreation, int] = {e: i for i, e in enumer
 DAYS_OPTIONS = [('Week', 7), ('2 Weeks', 14), ('Month', 30), ('90 Days', 90)]
 
 
+@dataclass(frozen=True)
+class NavbarItem:
+    display_text: str
+
+    @classmethod
+    def from_dict(cls, source: dict[str, Any]) -> 'NavbarItem':
+        t = source['type']
+        if t == 'separator':
+            return NavbarSeparator('')
+        elif t == 'text':
+            return NavbarText(display_text=source['text'])
+        elif t == 'menu':
+            return NavbarMenu(display_text=source['text'],
+                              children=list(cls.from_dict(cs) for cs in source['children']))
+        elif t == 'button':
+            return NavbarButton(display_text=source['text'], target_url=source['url'])
+        else:
+            raise RuntimeError('Invalid NavbarItem type')
+
+
+@dataclass(frozen=True)
+class NavbarSeparator(NavbarItem):
+    type = 'separator'
+
+
+@dataclass(frozen=True)
+class NavbarText(NavbarItem):
+    type = 'text'
+
+
+@dataclass(frozen=True)
+class NavbarMenu(NavbarItem):
+    children: List[NavbarItem]
+    type = 'menu'
+
+
+@dataclass(frozen=True)
+class NavbarButton(NavbarItem):
+    target_url: str
+    type = 'button'
+
+
+def build_navbar() -> list[NavbarItem]:
+    worlds: dict[str, dict[str, list[str]]] = {}  # Dict[region_name, Dict[dc_name, List[world_name]]]
+    for w in World.objects.all():   # type: World
+        dc = w.data_center
+        get_or_add_to_dict(
+                d=get_or_add_to_dict(d=worlds, key=dc.region.name, default_factory=dict),
+                key=dc.name,
+                default_factory=list
+        ).append(w.name)
+    worlds_menu = []
+    for i, (reg_name, dc) in enumerate(worlds.items()):
+        if i > 0:
+            worlds_menu.append(NavbarSeparator(''))
+        worlds_menu.append(NavbarText(display_text=reg_name))
+        for dc_name, world_list in dc.items():
+            dc_children: list[NavbarItem] = []
+            worlds_menu.append(NavbarMenu(display_text=dc_name, children=dc_children))
+            for world_name in world_list:
+                world_url = reverse_lazy('world_history', kwargs={'world_name': world_name})
+                dc_children.append(NavbarButton(display_text=world_name, target_url=world_url))
+    return [
+        NavbarButton(display_text='Home', target_url=reverse_lazy('index')),
+        NavbarMenu(display_text='Worlds', children=worlds_menu)
+    ]
+
+
 def timezone_ctx() -> dict[str, Any]:
     return dict(timezones=TIMEZONES_LIST, current_tz=timezone.get_current_timezone())
+
+
+navbar = build_navbar()
+
+
+def navbar_ctx(current_position: list[str] | None = None) -> dict[str, Any]:
+    return {'navbar': navbar, 'navbar_pos': current_position}
 
 
 @require_safe
@@ -66,6 +143,7 @@ def snapshot_details(request: HttpRequest, snap_id: int):
 
     context = {'snapshot': s, 'regions': regions, 'regions_active': r_active}
     context.update(timezone_ctx())
+    context.update(navbar_ctx())
     return render(request=request, template_name='ffxivws/snapshot.html.jinja', using='jinja', context=context)
 
 
@@ -117,6 +195,7 @@ def world_history(request: HttpRequest, world_name: str):
         cd -= timedelta(days=1)
     context = dict(days=days, world=world, from_date=from_date, today=today, days_opt=DAYS_OPTIONS)
     context.update(timezone_ctx())
+    context.update(navbar_ctx(current_position=['Worlds', world.data_center.name, world.name]))
     return render(request=request, template_name='ffxivws/world.html.jinja', using='jinja', context=context)
 
 

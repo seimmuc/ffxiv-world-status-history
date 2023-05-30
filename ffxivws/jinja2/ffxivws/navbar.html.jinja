@@ -1,0 +1,32 @@
+{% macro nav_item(item, depth, position) -%}
+ {% if item.type == 'separator' %}
+  <li class="navbar-item separator"></li>
+ {% elif item.type == 'text' %}
+  <li class="navbar-item{% if position[depth] == item.display_text %} current{% endif %} text">
+    <a>{{ item.display_text }}</a>
+  </li>
+ {% elif item.type == 'menu' %}
+  <li class="navbar-item{% if position[depth] == item.display_text %} current{% endif %} {% if depth == 0 %}dropdown{% else %}dropright{% endif %}">
+    <a>{{ item.display_text }}</a>
+    <ul class="navmenu vertical">
+     {% for child in item.children %}
+      {{ nav_item(child, depth + 1, position) }}
+     {% endfor %}
+    </ul>
+  </li>
+ {% elif item.type == 'button' %}
+  <li class="navbar-item{% if position[depth] == item.display_text %} current{% endif %} button">
+    <a href="{{ item.target_url }}">{{ item.display_text }}</a>
+  </li>
+ {% endif %}
+{%- endmacro %}
+
+{% if navbar %}
+<nav id="navbar">
+  <ul class="navmenu horizontal root">
+   {% for ni in navbar %}
+    {{ nav_item(ni, 0, navbar_pos) }}
+   {% endfor %}
+  </ul>
+</nav>
+{% endif %}
