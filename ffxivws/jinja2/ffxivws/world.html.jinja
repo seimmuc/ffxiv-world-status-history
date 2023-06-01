@@ -47,8 +47,8 @@
     barBlocks.each(function() {
       const blockTag = $(this);
       const snapshotIds = blockTag.attr('all-snapshots').split(',').filter(s => s.trim());
-      const date = new Date(blockTag.attr('day'));
-      blockTag.click((e) => {
+      const date = new Date(`${blockTag.attr('day')}T00:00:00`);  // date-time form must be used so that browser assumes local time instead of UTC
+      blockTag.click(e => {
         // If clicked inside child popup, ignore click
         if (!blockTag.is(e.target) && $(e.target).parentsUntil(blockTag).is(function() {return this.classList.contains('details-popup');})) {
           return;
