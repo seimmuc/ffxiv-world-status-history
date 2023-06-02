@@ -7,6 +7,9 @@ body {
   margin: 0;
 }
 
+body > main {
+  margin-bottom: 50px;
+}
 #page-header {
   display: flex;
   flex-direction: column;
@@ -29,11 +32,12 @@ body {
   font-size: 1.1em;
   color: #ddd;
 }
-#footer {
+#page-footer {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
+  height: 46.5px;
   background-color: #363636;
   border-top: solid 1.5px rgba(0, 0, 0, 0.3);
   padding-top: 2px;
@@ -57,6 +61,8 @@ a.button:hover {
 /* Navbar */
 
 #navbar {
+  position: sticky;
+  top: 0;
   background-color: #222;
   z-index: 5;
 }
@@ -124,7 +130,7 @@ a.button:hover {
 #navbar ul.navmenu > li.navbar-item.separator {
   height: 2px;
   margin-top: 0.3em;
-  margin-bottom: 0.2em;
+  margin-bottom: 0.15em;
   margin-right: 8px;
   margin-left: 8px;
   background-color: #999;
@@ -474,6 +480,7 @@ section.snapshot-dc-block .world-name > a:visited {
 .history-bars-wrapper ol.history-bar > li.history-bar-line > div.details-popup > ol.snapshot-list > li > a.snapshots-link:visited {
   color: #d9ebea;
 }
+
 .barcol-status-onl,
 .barcol-classification-st,
 .barcol-charcreate-1 {

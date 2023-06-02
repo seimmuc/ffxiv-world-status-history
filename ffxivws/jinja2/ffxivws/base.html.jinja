@@ -1,3 +1,5 @@
+{% from 'ffxivws/common.html.jinja' import timezone_head, timezones_form %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +26,14 @@
     {% block header_extra %}{% endblock %}
   </header>
   {% endblock %}
-  {% block main required %}{% endblock %}
+  <main {%- if main_id %} id="{{ main_id }}"{% endif %}>
+    {% block main required %}{% endblock %}
+  </main>
+  {% block footer %}
+  <footer id="page-footer">
+    {{ timezones_form(csrf_input, timezones, current_tz, request.get_full_path()) }}
+    {% block footer_extra %}{% endblock %}
+  </footer>
+  {% endblock %}
 </body>
 </html>

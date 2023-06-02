@@ -1,7 +1,7 @@
 {% extends "ffxivws/base.html.jinja" %}
-{% from 'ffxivws/common.html.jinja' import timezone_head, timezones_form %}
 
 {% set show_header_title = true %}
+{% set main_id = 'world-main' %}
 
 {% block head_extra %}
 {{- timezone_head() -}}
@@ -139,26 +139,20 @@
 {% endmacro %}
 
 {% block main %}
-  <main id="world-main">
-    <div class="history-bars-wrapper
-        {%- if days|length < 9 %} week
-        {%- elif days|length < 16 %} twoweek
-        {%- elif days|length < 32 %} month
-        {%- else %} multmonth
-        {%- endif -%}
-    " snaps-url="{{ url('snapshot_details', kwargs={'snap_id': 12345}) }}">
-      {{ history_bar('status', 'Status') }}
-      {{ history_bar('classification', 'Classification') }}
-      {{ history_bar('charcreate', 'Character creation') }}
-      <div class="date-range">
-        <p>Today</p>
-        <div class="spacer"></div>
-        <p>{{ days|length - 1 }} days ago</p>
-      </div>
+  <div class="history-bars-wrapper
+      {%- if days|length < 9 %} week
+      {%- elif days|length < 16 %} twoweek
+      {%- elif days|length < 32 %} month
+      {%- else %} multmonth
+      {%- endif -%}
+  " snaps-url="{{ url('snapshot_details', kwargs={'snap_id': 12345}) }}">
+    {{ history_bar('status', 'Status') }}
+    {{ history_bar('classification', 'Classification') }}
+    {{ history_bar('charcreate', 'Character creation') }}
+    <div class="date-range">
+      <p>Today</p>
+      <div class="spacer"></div>
+      <p>{{ days|length - 1 }} days ago</p>
     </div>
-  </main>
-
-  <footer id="footer">
-    {{ timezones_form(csrf_input, timezones, current_tz, request.get_full_path()) }}
-  </footer>
+  </div>
 {% endblock %}
