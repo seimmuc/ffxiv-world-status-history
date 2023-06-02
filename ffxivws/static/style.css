@@ -430,32 +430,46 @@ section.snapshot-dc-block .world-name > a:visited {
 .history-bars-wrapper ol.history-bar > li.history-bar-line > div.details-popup {
   position: absolute;
   z-index: 10;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
   width: max-content;
-  padding: 5px 2px;
+  padding: 6px 4px;
   background-color: #525252;
   border-radius: 6px;
   cursor: default;
 }
+.history-bars-wrapper ol.history-bar > li.history-bar-line > div.details-popup > p {
+  margin: 1px 4px;
+}
 .history-bars-wrapper ol.history-bar > li.history-bar-line > div.details-popup > p.details-date {
-  margin: 2px 5px;
-  text-align: center;
-  margin-bottom: 7px;
+  color: #cbc;
+}
+.history-bars-wrapper ol.history-bar > li.history-bar-line > div.details-popup > p.details-value {
+  color: #ded;
 }
 .history-bars-wrapper ol.history-bar > li.history-bar-line > div.details-popup > ol.snapshot-list {
   list-style: none;
   padding-left: 0;
+  margin-top: 5px;
 }
 .history-bars-wrapper ol.history-bar > li.history-bar-line > div.details-popup > ol.snapshot-list > li {
-  padding: 1px 6px;
+  padding: 0;
   border-radius: 3px;
 }
 .history-bars-wrapper ol.history-bar > li.history-bar-line > div.details-popup > ol.snapshot-list > li:has(.snapshots-link):hover {
   background-color: #0003;
 }
-.history-bars-wrapper ol.history-bar > li.history-bar-line > div.details-popup > ol.snapshot-list > li > a.snapshots-link {
+.history-bars-wrapper ol.history-bar > li.history-bar-line > div.details-popup > ol.snapshot-list > li > a {
+  display: inline-block;
+  width: calc(100% - 12px);
+  padding: 1px 6px;
   text-decoration: none;
-  color: #ebebd9;
   user-select: none;
+}
+.history-bars-wrapper ol.history-bar > li.history-bar-line > div.details-popup > ol.snapshot-list > li > a.snapshots-link {
+  color: #ebebd9;
 }
 .history-bars-wrapper ol.history-bar > li.history-bar-line > div.details-popup > ol.snapshot-list > li > a.snapshots-link:visited {
   color: #d9ebea;

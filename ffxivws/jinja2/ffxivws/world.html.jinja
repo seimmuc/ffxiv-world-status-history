@@ -6,17 +6,30 @@
 {% block head_extra %}
 {{- timezone_head() -}}
 <script>
+  {# jinja injection start #}
+  const snaps = {{ js_data|safe }};
+  {# jinja injection end #}
+
+  const STATE_ATTRIBUTES = ['status', 'classification', 'charcreate'];
   let barBlockPopup = undefined;
 
-  function createPopup(date, snapshotIds, snapsUrlBase, blockTag) {
-    const newPopup = $(`<div class="details-popup"><p class="details-date">${date.toLocaleDateString()}</p></div>`);
+  function dateOnlyISOString(date) {
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  }
+  function createPopup(date, snapshotIds, attrType, snapsUrlBase, blockTag) {
+    const snapData = new Map(snapshotIds.map(id => [id, snaps[id][attrType]]));
+    const attrValues = new Set(snapData.values());
+    const newPopup = $(`<div class="details-popup"><p class="details-date"><time datetime="${dateOnlyISOString(date)}">${date.toLocaleDateString()}</time></p></div>`);
+    if (attrValues.size == 1) {
+      newPopup.append(`<p class="details-value">${attrValues.values().next().value}</p>`);
+    }
     const snapsList = $('<ol class="snapshot-list"></ol>');
-    if (snapshotIds.length) {
-      for (const sid of snapshotIds) {
-        snapsList.append($(`<li><a class="snapshots-link" href="${snapsUrlBase.replaceAll("12345", sid.toString())}">Snapshot ${sid}</a></li>`));
+    if (snapData.size) {
+      for (const [sid, sdata] of snapData.entries()) {
+        snapsList.append($(`<li><a class="snapshots-link" href="${snapsUrlBase.replaceAll("12345", sid.toString())}">Snapshot ${sid}${attrValues.size != 1 ? ' (' + sdata + ')' : ''}</a></li>`));
       }
     } else {
-      snapsList.append($('<li>No snapshots</li>'))
+      snapsList.append($('<li><a>No snapshots</a></li>'));
     }
     snapsList.appendTo(newPopup);
     // Position the popup with CSS
@@ -48,6 +61,7 @@
       const blockTag = $(this);
       const snapshotIds = blockTag.attr('all-snapshots').split(',').filter(s => s.trim());
       const date = new Date(`${blockTag.attr('day')}T00:00:00`);  // date-time form must be used so that browser assumes local time instead of UTC
+      const attrType = Array.from(this.parentElement.classList).find(c => STATE_ATTRIBUTES.includes(c));
       blockTag.click(e => {
         // If clicked inside child popup, ignore click
         if (!blockTag.is(e.target) && $(e.target).parentsUntil(blockTag).is(function() {return this.classList.contains('details-popup');})) {
@@ -64,7 +78,7 @@
           // Remove existing popup if there is one open
           closePopup();
           // Create new popup element
-          const newPopup = createPopup(date, snapshotIds, snapsUrlBase, blockTag);
+          const newPopup = createPopup(date, snapshotIds, attrType, snapsUrlBase, blockTag);
           // Add popup to the DOM and save the state
           openPopup(newPopup, blockTag, true);
         }

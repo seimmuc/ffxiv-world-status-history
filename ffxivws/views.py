@@ -1,3 +1,4 @@
+import json
 import zoneinfo
 from dataclasses import dataclass
 from datetime import datetime, date, time, timedelta
@@ -193,7 +194,11 @@ def world_history(request: HttpRequest, world_name: str):
     while cd >= from_date:
         days.append((cd, WorldStateSummary.from_world_state_list(by_day[cd]) if (cd in by_day) else None))
         cd -= timedelta(days=1)
-    context = dict(days=days, world=world, from_date=from_date, today=today, days_opt=DAYS_OPTIONS)
+    js_data = {ws.snapshot.id: dict(status=ws.get_status_display(), classification=ws.get_classification_display(),
+                                    charcreate=ws.get_char_creation_display())
+               for day, summary in days if summary is not None for ws in summary.snapshots}
+    js_data = json.dumps(js_data, ensure_ascii=False)
+    context = dict(days=days, world=world, from_date=from_date, today=today, days_opt=DAYS_OPTIONS, js_data=js_data)
     context.update(timezone_ctx())
     context.update(navbar_ctx(current_position=['Worlds', world.data_center.name, world.name]))
     return render(request=request, template_name='ffxivws/world.html.jinja', using='jinja', context=context)
