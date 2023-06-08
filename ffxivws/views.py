@@ -20,6 +20,8 @@ def index(request: HttpRequest):
     return render(request=request, template_name='ffxivws/index.html.jinja', context={})
 
 
+
+# Constants
 regions_abr_map = {
     'na': 'North America',
     'eu': 'Europe',
@@ -41,6 +43,7 @@ CHAR_CREATION_ORD: dict[WorldState.CharCreation, int] = {e: i for i, e in enumer
 DAYS_OPTIONS = [('Week', 7), ('2 Weeks', 14), ('Month', 30), ('90 Days', 90)]
 
 
+# Utility classes and functions
 @dataclass(frozen=True)
 class NavbarItem:
     display_text: str
@@ -83,17 +86,17 @@ class NavbarButton(NavbarItem):
     type = 'button'
 
 
-def build_navbar() -> list[NavbarItem]:
-    worlds: dict[str, dict[str, list[str]]] = {}  # Dict[region_name, Dict[dc_name, List[world_name]]]
+def build_navbar() -> tuple[list[NavbarItem], dict[str, dict[str, list[str]]]]:
+    wld_dict: dict[str, dict[str, list[str]]] = {}  # Dict[region_name, Dict[dc_name, List[world_name]]]
     for w in World.objects.all():   # type: World
         dc = w.data_center
         get_or_add_to_dict(
-                d=get_or_add_to_dict(d=worlds, key=dc.region.name, default_factory=dict),
+                d=get_or_add_to_dict(d=wld_dict, key=dc.region.name, default_factory=dict),
                 key=dc.name,
                 default_factory=list
         ).append(w.name)
     worlds_menu = []
-    for i, (reg_name, dc) in enumerate(worlds.items()):
+    for i, (reg_name, dc) in enumerate(wld_dict.items()):
         if i > 0:
             worlds_menu.append(NavbarSeparator(''))
         worlds_menu.append(NavbarText(display_text=reg_name))
@@ -106,14 +109,15 @@ def build_navbar() -> list[NavbarItem]:
     return [
         NavbarButton(display_text='Home', target_url=reverse_lazy('index')),
         NavbarMenu(display_text='Worlds', children=worlds_menu)
-    ]
+    ], wld_dict
+
+
+# Constants that require utility classes/functions
+navbar, worlds = build_navbar()
 
 
 def timezone_ctx() -> dict[str, Any]:
     return dict(timezones=TIMEZONES_LIST, current_tz=timezone.get_current_timezone())
-
-
-navbar = build_navbar()
 
 
 def navbar_ctx(current_position: list[str] | None = None) -> dict[str, Any]:
