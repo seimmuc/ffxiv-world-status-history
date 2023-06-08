@@ -7,18 +7,13 @@ from typing import TypeVar, NamedTuple, List, Iterator, Any
 
 from django.db.models import QuerySet, Choices
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_safe, require_POST
 
 from ffxivws.models import Snapshot, WorldState, DataCenter, Region, World
 from ffxivws.utils import get_or_add_to_dict
-
-
-def index(request: HttpRequest):
-    return render(request=request, template_name='ffxivws/index.html.jinja', context={})
-
 
 
 # Constants
@@ -108,7 +103,10 @@ def build_navbar() -> tuple[list[NavbarItem], dict[str, dict[str, list[str]]]]:
                 dc_children.append(NavbarButton(display_text=world_name, target_url=world_url))
     return [
         NavbarButton(display_text='Home', target_url=reverse_lazy('index')),
-        NavbarMenu(display_text='Worlds', children=worlds_menu)
+        NavbarMenu(display_text='Worlds', children=worlds_menu),
+        NavbarMenu(display_text='Snapshots', children=[
+            NavbarButton(display_text='Latest', target_url=reverse_lazy('snapshot_latest'))
+        ])
     ], wld_dict
 
 
@@ -124,10 +122,26 @@ def navbar_ctx(current_position: list[str] | None = None) -> dict[str, Any]:
     return {'navbar': navbar, 'navbar_pos': current_position}
 
 
+def index(request: HttpRequest):
+    return render(request=request, template_name='ffxivws/index.html.jinja', context={})
+
+
+# noinspection PyUnusedLocal
+def snapshot_latest_redirect(request: HttpRequest):
+    try:
+        snapshot = Snapshot.objects.latest('timestamp')
+    except Snapshot.DoesNotExist:
+        return HttpResponse(b'No snapshots found', status=404, content_type='text/plain')
+    return redirect('snapshot_details', permanent=False, snap_id=snapshot.id)
+
+
 @require_safe
 def snapshot_details(request: HttpRequest, snap_id: int):
-    # noinspection PyUnresolvedReferences
-    s = Snapshot.objects.get(id=snap_id)
+    try:
+        # noinspection PyUnresolvedReferences
+        s = Snapshot.objects.get(id=snap_id)
+    except Snapshot.DoesNotExist:
+        return HttpResponse(b'Snapshot not found', status=404, content_type='text/plain')
 
     regions: dict[str, dict[str, list[WorldState]]] = dict()    # {} breaks PyCharm's type detection for some reason
     for ws in s.worldstate_set.all():   # type: WorldState
@@ -148,7 +162,7 @@ def snapshot_details(request: HttpRequest, snap_id: int):
 
     context = {'snapshot': s, 'regions': regions, 'regions_active': r_active}
     context.update(timezone_ctx())
-    context.update(navbar_ctx())
+    context.update(navbar_ctx(current_position=['Snapshots']))
     return render(request=request, template_name='ffxivws/snapshot.html.jinja', using='jinja', context=context)
 
 
