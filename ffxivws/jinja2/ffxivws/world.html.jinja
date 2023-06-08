@@ -1,4 +1,5 @@
 {% extends "ffxivws/base.html.jinja" %}
+{% from 'ffxivws/common.html.jinja' import world_history_section %}
 
 {% set show_header_title = true %}
 {% set main_id = 'world-main' %}
@@ -110,48 +111,6 @@
   </div>
 {% endblock %}
 
-{% macro bar_line_data(summary, attr_name, day) -%}
-  day="{{ day }}" all-snapshots="{{ summary.snapshots|map(attribute='snapshot.id')|join(',') }}"
-{%- endmacro %}
-
-{% macro bar_line(summary, attr_name, day) %}
-  {% if summary is none -%}
-    <li class="history-bar-line{% if day == today %} today{% endif %} barcol-{{ attr_name }}-unknown" {{ bar_line_data(summary, attr_name, day) }}></li>
-  {%- elif summary[attr_name]|length == 1 -%}
-    <li class="history-bar-line{% if day == today %} today{% endif %} barcol-{{ attr_name }}-{{ (summary[attr_name]|first).value|string|lower }}" {{ bar_line_data(summary, attr_name, day) }}></li>
-  {%- else -%}
-    <li class="history-bar-line{% if day == today %} today{% endif %} split" {{ bar_line_data(summary, attr_name, day) }}>
-     {% for val in summary[attr_name] %}
-      <div class="barcol-{{ attr_name }}-{{ val.value|string|lower }}"></div>
-     {% endfor %}
-    </li>
-  {%- endif %}
-{% endmacro %}
-
-{% macro history_bar(attr_name, label) %}
-  <span class="history-bar-label">{{ label }}</span>
-  <ol class="history-bar {{ attr_name }}">
-   {% for day, summary in days %}
-    {{ bar_line(summary, attr_name, day) }}
-   {% endfor %}
-  </ol>
-{% endmacro %}
-
 {% block main %}
-  <div class="history-bars-wrapper
-      {%- if days|length < 9 %} week
-      {%- elif days|length < 16 %} twoweek
-      {%- elif days|length < 32 %} month
-      {%- else %} multmonth
-      {%- endif -%}
-  " snaps-url="{{ url('snapshot_details', kwargs={'snap_id': 12345}) }}">
-    {{ history_bar('status', 'Status') }}
-    {{ history_bar('classification', 'Classification') }}
-    {{ history_bar('charcreate', 'Character creation') }}
-    <div class="date-range">
-      <p>Today</p>
-      <div class="spacer"></div>
-      <p>{{ days|length - 1 }} days ago</p>
-    </div>
-  </div>
+  {{ world_history_section(days) }}
 {% endblock %}
