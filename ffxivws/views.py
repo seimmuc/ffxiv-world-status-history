@@ -110,10 +110,6 @@ def build_navbar() -> tuple[list[NavbarItem], dict[str, dict[str, list[str]]]]:
     ], wld_dict
 
 
-# Constants that require utility classes/functions
-navbar, worlds = build_navbar()
-
-
 def timezone_ctx() -> dict[str, Any]:
     return dict(timezones=TIMEZONES_LIST, current_tz=timezone.get_current_timezone())
 
@@ -122,9 +118,17 @@ def navbar_ctx(current_position: list[str] | None = None) -> dict[str, Any]:
     return {'navbar': navbar, 'navbar_pos': current_position}
 
 
+# Constants that require utility classes/functions
+navbar, worlds = build_navbar()
+
+
+# Index (main page) view
+
 def index(request: HttpRequest):
     return render(request=request, template_name='ffxivws/index.html.jinja', context={})
 
+
+# Snapshot view
 
 # noinspection PyUnusedLocal
 def snapshot_latest_redirect(request: HttpRequest):
@@ -165,6 +169,8 @@ def snapshot_details(request: HttpRequest, snap_id: int):
     context.update(navbar_ctx(current_position=['Snapshots']))
     return render(request=request, template_name='ffxivws/snapshot.html.jinja', using='jinja', context=context)
 
+
+# World history view
 
 class WorldStateSummary(NamedTuple):
     status: List[WorldState.Status]
@@ -221,6 +227,8 @@ def world_history(request: HttpRequest, world_name: str):
     context.update(navbar_ctx(current_position=['Worlds', world.data_center.name, world.name]))
     return render(request=request, template_name='ffxivws/world.html.jinja', using='jinja', context=context)
 
+
+# Set timezone POST endpoint
 
 @require_POST
 def set_timezone(request: HttpRequest):
