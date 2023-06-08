@@ -4,7 +4,6 @@
 {% set main_id = 'world-main' %}
 
 {% block head_extra %}
-{{- timezone_head() -}}
 <script>
   {# jinja injection start #}
   const snaps = {{ js_data|safe }};
