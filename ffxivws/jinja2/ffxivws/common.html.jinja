@@ -19,6 +19,19 @@
   </form>
 {% endmacro %}
 
+{# World history block #}
+
+{% macro world_history_head(world_states) %}
+  {# this script contains jinja injections #}
+  <script type="module">
+    import initWhJs from '{{ static("worldhistory.mjs") }}';
+    $(document).ready(function() {
+      const wstates = {{ world_states|safe }};
+      initWhJs(wstates, "{{ url('snapshot_details', kwargs={'snap_id': 12345}) }}");
+    });
+  </script>
+{% endmacro %}
+
 {% macro bar_line_data(summary, attr_name, day) -%}
   day="{{ day }}" all-snapshots="{{ summary.snapshots|map(attribute='snapshot.id')|join(',') }}"
 {%- endmacro %}
@@ -46,14 +59,14 @@
   </ol>
 {% endmacro %}
 
-{% macro world_history_section(day_sums, today) %}
+{% macro world_history_section(day_sums, world_id, today) %}
 <div class="history-bars-wrapper
     {%- if day_sums|length < 9 %} week
     {%- elif day_sums|length < 16 %} twoweek
     {%- elif day_sums|length < 32 %} month
     {%- else %} multmonth
     {%- endif -%}
-" snaps-url="{{ url('snapshot_details', kwargs={'snap_id': 12345}) }}">
+" world-id="{{ world_id }}">
   {{ history_bar(day_sums, 'status', 'Status', today) }}
   {{ history_bar(day_sums, 'classification', 'Classification', today) }}
   {{ history_bar(day_sums, 'charcreate', 'Character creation', today) }}
