@@ -23,13 +23,13 @@
   day="{{ day }}" all-snapshots="{{ summary.snapshots|map(attribute='snapshot.id')|join(',') }}"
 {%- endmacro %}
 
-{% macro bar_line(summary, attr_name, day) %}
+{% macro bar_line(summary, attr_name, day, is_today) %}
   {% if summary is none -%}
-    <li class="history-bar-line{% if day == today %} today{% endif %} barcol-{{ attr_name }}-unknown" {{ bar_line_data(summary, attr_name, day) }}></li>
+    <li class="history-bar-line{% if is_today %} today{% endif %} barcol-{{ attr_name }}-unknown" {{ bar_line_data(summary, attr_name, day) }}></li>
   {%- elif summary[attr_name]|length == 1 -%}
-    <li class="history-bar-line{% if day == today %} today{% endif %} barcol-{{ attr_name }}-{{ (summary[attr_name]|first).value|string|lower }}" {{ bar_line_data(summary, attr_name, day) }}></li>
+    <li class="history-bar-line{% if is_today %} today{% endif %} barcol-{{ attr_name }}-{{ (summary[attr_name]|first).value|string|lower }}" {{ bar_line_data(summary, attr_name, day) }}></li>
   {%- else -%}
-    <li class="history-bar-line{% if day == today %} today{% endif %} split" {{ bar_line_data(summary, attr_name, day) }}>
+    <li class="history-bar-line{% if is_today %} today{% endif %} split" {{ bar_line_data(summary, attr_name, day) }}>
      {% for val in summary[attr_name] %}
       <div class="barcol-{{ attr_name }}-{{ val.value|string|lower }}"></div>
      {% endfor %}
@@ -37,16 +37,16 @@
   {%- endif %}
 {% endmacro %}
 
-{% macro history_bar(day_sums, attr_name, label) %}
+{% macro history_bar(day_sums, attr_name, label, today) %}
   <span class="history-bar-label">{{ label }}</span>
   <ol class="history-bar {{ attr_name }}">
    {% for day, summary in day_sums %}
-    {{ bar_line(summary, attr_name, day) }}
+    {{ bar_line(summary, attr_name, day, day == today) }}
    {% endfor %}
   </ol>
 {% endmacro %}
 
-{% macro world_history_section(day_sums) %}
+{% macro world_history_section(day_sums, today) %}
 <div class="history-bars-wrapper
     {%- if day_sums|length < 9 %} week
     {%- elif day_sums|length < 16 %} twoweek
@@ -54,9 +54,9 @@
     {%- else %} multmonth
     {%- endif -%}
 " snaps-url="{{ url('snapshot_details', kwargs={'snap_id': 12345}) }}">
-  {{ history_bar(day_sums, 'status', 'Status') }}
-  {{ history_bar(day_sums, 'classification', 'Classification') }}
-  {{ history_bar(day_sums, 'charcreate', 'Character creation') }}
+  {{ history_bar(day_sums, 'status', 'Status', today) }}
+  {{ history_bar(day_sums, 'classification', 'Classification', today) }}
+  {{ history_bar(day_sums, 'charcreate', 'Character creation', today) }}
   <div class="date-range">
     <p>Today</p>
     <div class="spacer"></div>
