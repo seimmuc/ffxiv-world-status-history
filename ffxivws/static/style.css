@@ -91,9 +91,12 @@ a.button:hover {
 #navbar ul.navmenu.root {
   padding-left: 30px;
 }
+#navbar ul.navmenu.horizontal > li.navbar-item {
+  padding-bottom: 3px;
+}
 #navbar ul.navmenu.horizontal > li.navbar-item.dropdown > ul.navmenu {
   top: calc(100% - 1px);
-  left: -6px;
+  left: 2px;
 }
 #navbar ul.navmenu.vertical > li.navbar-item.dropright > ul.navmenu {
   top: 0px;

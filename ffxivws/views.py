@@ -164,7 +164,7 @@ def snapshot_details(request: HttpRequest, snap_id: int):
     else:
         r_active = [regions_abr_map[r] for r in reg_list if r in regions_abr_map]
 
-    context = {'snapshot': s, 'regions': regions, 'regions_active': r_active}
+    context = dict(snapshot=s, regions=regions, regions_active=r_active)
     context.update(timezone_ctx())
     context.update(navbar_ctx(current_position=['Snapshots']))
     return render(request=request, template_name='ffxivws/snapshot.html.jinja', using='jinja', context=context)
@@ -223,7 +223,7 @@ def world_history(request: HttpRequest, world_name: str):
                              charcreate=ws.get_char_creation_display())
         for day, summary in days if summary is not None for ws in summary.snapshots
     }}, ensure_ascii=False)
-    context = dict(days=days, world=world, from_date=from_date, today=today, days_opt=DAYS_OPTIONS, js_data=js_data)
+    context = dict(days=days, world=world, today=today, days_opt=DAYS_OPTIONS, js_data=js_data)
     context.update(timezone_ctx())
     context.update(navbar_ctx(current_position=['Worlds', world.data_center.name, world.name]))
     return render(request=request, template_name='ffxivws/world.html.jinja', using='jinja', context=context)
