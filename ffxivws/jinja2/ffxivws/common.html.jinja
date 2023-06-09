@@ -22,6 +22,7 @@
 {# World history block #}
 
 {% macro world_history_head(world_states) %}
+  <link rel="stylesheet" href="{{ static('worldhistory.css') }}">
   {# this script contains jinja injections #}
   <script type="module">
     import initWhJs from '{{ static("worldhistory.mjs") }}';
@@ -60,7 +61,7 @@
 {% endmacro %}
 
 {% macro world_history_section(day_sums, world_id, today) %}
-<div class="history-bars-wrapper
+<div class="history-bars-section
     {%- if day_sums|length < 9 %} week
     {%- elif day_sums|length < 16 %} twoweek
     {%- elif day_sums|length < 32 %} month

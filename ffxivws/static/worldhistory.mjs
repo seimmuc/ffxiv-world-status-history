@@ -49,7 +49,7 @@ export default function init(worldStateData, snapsUrlBase) {
     throw Error('World history module was already initialized!')
   }
   // Iterate over all world sections
-  const worldSections = $('.history-bars-wrapper');
+  const worldSections = $('.history-bars-section');
   worldSections.each(function() {
     const worldSectionTag = $(this);
     const worldId = worldSectionTag.attr('world-id');

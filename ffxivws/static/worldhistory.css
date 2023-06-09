@@ -1,0 +1,157 @@
+.history-bars-section {
+  display: grid;
+  align-items: center;
+  border: solid 2px #777;
+  border-radius: 8px;
+  padding: 5px 7px;
+  grid-template-columns: auto 1fr;
+  width: 100%;
+  max-width: 1400px;
+}
+.history-bars-section.week {
+  max-width: 400px;
+}
+.history-bars-section.twoweek {
+  max-width: 600px;
+}
+.history-bars-section.month {
+  max-width: 900px;
+}
+.history-bars-section span.history-bar-label {
+  margin-right: 10px;
+  grid-column: 1;
+  justify-self: end;
+}
+.history-bars-section ol.history-bar {
+  grid-column: 2;
+  list-style-type: none;
+  padding: 0;
+  margin: 5px 0;
+  min-width: 100px;
+  height: 25px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+}
+.history-bars-section ol.history-bar > li.history-bar-line {
+  flex-grow: 1;
+  margin-right: 1px;
+  margin-left: 1px;
+  min-width: 2px;
+  cursor: pointer;
+}
+.history-bars-section ol.history-bar > li.history-bar-line.today {
+  overflow: hidden;
+  border-radius: 5px;
+  height: 90%;
+  align-self: center;
+}
+.history-bars-section ol.history-bar > li.history-bar-line.split {
+  display: flex;
+  flex-direction: column;
+}
+.history-bars-section ol.history-bar > li.history-bar-line.split div {
+  flex-grow: 1;
+}
+.history-bars-section ol.history-bar > li.history-bar-line.split div:not(:first-of-type) {
+  margin-top: 1px;
+}
+.history-bars-section .date-range {
+  grid-column: 2;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1px;
+  padding-bottom: 6px;
+}
+.history-bars-section .date-range > p {
+  padding: 0 5px;
+  color: #aaa;
+  font-size: 0.85em;
+  margin: 0;
+}
+.history-bars-section .date-range > .spacer {
+  height: 1.1px;
+  flex-grow: 1;
+  background-color: #aaa;
+  margin: 0 5px;
+}
+.history-bars-section ol.history-bar > li.history-bar-line > div.details-popup {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: max-content;
+  padding: 6px 4px;
+  background-color: #525252;
+  border-radius: 6px;
+  cursor: default;
+}
+.history-bars-section ol.history-bar > li.history-bar-line > div.details-popup > p {
+  margin: 1px 4px;
+}
+.history-bars-section ol.history-bar > li.history-bar-line > div.details-popup > p.details-date {
+  color: #cbc;
+}
+.history-bars-section ol.history-bar > li.history-bar-line > div.details-popup > p.details-value {
+  color: #ded;
+}
+.history-bars-section ol.history-bar > li.history-bar-line > div.details-popup > ol.snapshot-list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 5px;
+}
+.history-bars-section ol.history-bar > li.history-bar-line > div.details-popup > ol.snapshot-list > li {
+  padding: 0;
+  border-radius: 3px;
+}
+.history-bars-section ol.history-bar > li.history-bar-line > div.details-popup > ol.snapshot-list > li:has(.snapshots-link):hover {
+  background-color: #0003;
+}
+.history-bars-section ol.history-bar > li.history-bar-line > div.details-popup > ol.snapshot-list > li > a {
+  display: inline-block;
+  width: calc(100% - 12px);
+  padding: 1px 6px;
+  text-decoration: none;
+  user-select: none;
+}
+.history-bars-section ol.history-bar > li.history-bar-line > div.details-popup > ol.snapshot-list > li > a.snapshots-link {
+  color: #ebebd9;
+}
+.history-bars-section ol.history-bar > li.history-bar-line > div.details-popup > ol.snapshot-list > li > a.snapshots-link:visited {
+  color: #d9ebea;
+}
+
+.barcol-status-onl,
+.barcol-classification-st,
+.barcol-charcreate-1 {
+  background-color: #7acc52;
+}
+.barcol-status-mtp {
+  background-color: #ccb233;
+}
+.barcol-status-mtf,
+.barcol-classification-cg,
+.barcol-charcreate-0 {
+  background-color: #d97777;
+}
+.barcol-classification-nw {
+  background-color: #4b8ad2;
+}
+.barcol-classification-pf {
+  background-color: #ad6ed4;
+}
+.barcol-status-unknown,
+.barcol-status-unk,
+.barcol-classification-unknown,
+.barcol-classification-uk,
+.barcol-charcreate-unknown,
+.barcol-charcreate--1 {
+  background-color: #a8a8a8;
+}
