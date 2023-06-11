@@ -119,7 +119,7 @@ def navbar_ctx(current_position: list[str] | None = None) -> dict[str, Any]:
 
 
 # Constants that require utility classes/functions
-navbar, worlds = build_navbar()
+navbar, world_map = build_navbar()
 
 
 # Index (main page) view
@@ -196,6 +196,41 @@ class WorldStateSummary(NamedTuple):
         return sorted((enum_dict[s] for s in set(it)), key=lambda e: enum_ord[e])
 
 
+def get_daily_world_summaries_and_json(worlds: list[World], to_date: date, history_length: int) ->\
+        tuple[dict[int, list[tuple[date, WorldStateSummary | None]]], str]:
+    # Note that this function performs a database query
+    from_date = to_date - timedelta(days=history_length)
+    from_time = datetime.combine(from_date, time(), tzinfo=timezone.get_current_timezone())
+
+    states: QuerySet[WorldState] = WorldState.objects.filter(world__in=worlds, snapshot__timestamp__gte=from_time)
+    states_sorted: dict[int, dict[date, list[WorldState]]] = {}
+    js_data: dict[int, dict[int, dict[str, str]]] = {}
+
+    for state in states:
+        get_or_add_to_dict(
+                d=get_or_add_to_dict(d=states_sorted, key=state.world.id, default_factory=dict),
+                key=timezone.localdate(state.snapshot.timestamp),
+                default_factory=list
+        ).append(state)
+        get_or_add_to_dict(d=js_data, key=state.world.id, default_factory=dict)[state.snapshot.id] = {
+            'status': state.get_status_display(),
+            'classification': state.get_classification_display(),
+            'charcreate': state.get_char_creation_display()
+        }
+
+    world_summaries: dict[int, list[tuple[date, WorldStateSummary | None]]] = {}
+    for world_id, world_states in states_sorted.items():
+        days: list[tuple[date, WorldStateSummary | None]] = []
+        cd: date = to_date
+        while cd >= from_date:
+            summary = WorldStateSummary.from_world_state_list(world_states[cd]) if (cd in world_states) else None
+            days.append((cd, summary))
+            cd -= timedelta(days=1)
+        world_summaries[world_id] = days
+
+    return world_summaries, json.dumps(js_data, ensure_ascii=False)
+
+
 @require_safe
 def world_history(request: HttpRequest, world_name: str):
     if not world_name.isalpha():
@@ -209,23 +244,9 @@ def world_history(request: HttpRequest, world_name: str):
     except ValueError:
         history_length = 7
     today = timezone.localdate()
-    from_date = today - timedelta(days=history_length)
-    from_time = datetime.combine(from_date, time(), tzinfo=timezone.get_current_timezone())
-    states: QuerySet[WorldState] = WorldState.objects.filter(world=world, snapshot__timestamp__gte=from_time)
-    by_day: dict[date, list[WorldState]] = {}
-    for state in states:
-        get_or_add_to_dict(d=by_day, key=timezone.localdate(state.snapshot.timestamp), default_factory=list).append(state)
-    days: list[tuple[date, WorldStateSummary | None]] = []
-    cd: date = today
-    while cd >= from_date:
-        days.append((cd, WorldStateSummary.from_world_state_list(by_day[cd]) if (cd in by_day) else None))
-        cd -= timedelta(days=1)
-    js_data = json.dumps({world.id: {
-        ws.snapshot.id: dict(status=ws.get_status_display(), classification=ws.get_classification_display(),
-                             charcreate=ws.get_char_creation_display())
-        for day, summary in days if summary is not None for ws in summary.snapshots
-    }}, ensure_ascii=False)
-    context = dict(days=days, world=world, today=today, days_opt=DAYS_OPTIONS, js_data=js_data)
+    world_summaries, js_data = get_daily_world_summaries_and_json(worlds=[world], to_date=today,
+                                                                  history_length=history_length)
+    context = dict(days=world_summaries[world.id], world=world, today=today, days_opt=DAYS_OPTIONS, js_data=js_data)
     context.update(timezone_ctx())
     context.update(navbar_ctx(current_position=['Worlds', world.data_center.name, world.name]))
     return render(request=request, template_name='ffxivws/world.html.jinja', using='jinja', context=context)
