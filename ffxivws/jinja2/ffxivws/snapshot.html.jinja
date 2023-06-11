@@ -1,4 +1,5 @@
 {% extends "ffxivws/base.html.jinja" %}
+{% from 'ffxivws/common.html.jinja' import snapshot_section %}
 
 {% set show_header_title, show_header_subtitle = true, true %}
 {% set main_id = 'snapshot-main' %}
@@ -63,21 +64,5 @@
 {% endblock %}
 
 {% block main %}
-  {% for reg_name, reg in regions.items() %}
-   {% for dc_name, dc in reg.items() %}
-    <section class="snapshot-dc-block{% if reg_name in regions_active %} shown{% endif %}" region-name="{{ reg_name }}">
-      <h5 class="dc-title">{{ dc_name }}</h5>
-      <ul class="dc-list">
-        {% for ws in dc %}
-        <li>
-          <p class="world-name"><a href="{{ url('world_history', kwargs={'world_name': ws.world.name}) }}">{{ ws.world.name }}</a></p>
-          <div class="world-icon regular world-icon-status-{{ ws.status|string|lower }}" tooltip-text="{{ ws.get_status_display() }}"></div>
-          <div class="world-icon regular world-icon-charcreate-{{ ws.char_creation|string }}" tooltip-text="{{ ws.get_char_creation_display() }}"></div>
-          <div class="world-icon regular world-icon-classification-{{ ws.classification|string|lower }}" tooltip-text="{{ ws.get_classification_display() }}"></div>
-        </li>
-        {% endfor %}
-      </ul>
-    </section>
-   {% endfor %}
-  {% endfor %}
+  {{ snapshot_section(regions, regions_active) }}
 {% endblock %}

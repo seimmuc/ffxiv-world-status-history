@@ -139,16 +139,9 @@ def snapshot_latest_redirect(request: HttpRequest):
     return redirect('snapshot_details', permanent=False, snap_id=snapshot.id)
 
 
-@require_safe
-def snapshot_details(request: HttpRequest, snap_id: int):
-    try:
-        # noinspection PyUnresolvedReferences
-        s = Snapshot.objects.get(id=snap_id)
-    except Snapshot.DoesNotExist:
-        return HttpResponse(b'Snapshot not found', status=404, content_type='text/plain')
-
-    regions: dict[str, dict[str, list[WorldState]]] = dict()    # {} breaks PyCharm's type detection for some reason
-    for ws in s.worldstate_set.all():   # type: WorldState
+def snapshot_ctx(s: Snapshot, reg_list: list[str]) -> dict[str, Any]:
+    regions: dict[str, dict[str, list[WorldState]]] = dict()  # {} breaks PyCharm's type detection for some reason
+    for ws in s.worldstate_set.all():  # type: WorldState
         dc: DataCenter = ws.world.data_center
         region: Region = dc.region
         get_or_add_to_dict(
@@ -156,15 +149,24 @@ def snapshot_details(request: HttpRequest, snap_id: int):
                 key=dc.name,
                 default_factory=list
         ).append(ws)
-
-    reg_params = request.GET.getlist('regions', ('all',))
-    reg_list = [r.lower() for r in chain.from_iterable(p.split(',') for p in reg_params)]
     if 'all' in reg_list:
         r_active = list(regions_abr_map.values())
     else:
         r_active = [regions_abr_map[r] for r in reg_list if r in regions_abr_map]
+    return dict(snapshot=s, regions=regions, regions_active=r_active)
 
-    context = dict(snapshot=s, regions=regions, regions_active=r_active)
+
+@require_safe
+def snapshot_details(request: HttpRequest, snap_id: int):
+    try:
+        # noinspection PyUnresolvedReferences
+        s = Snapshot.objects.get(id=snap_id)
+    except Snapshot.DoesNotExist:
+        return HttpResponse(b'Snapshot not found', status=404, content_type='text/plain')
+    reg_params = request.GET.getlist('regions', ('all',))
+    reg_list = [r.lower() for r in chain.from_iterable(p.split(',') for p in reg_params)]
+
+    context = snapshot_ctx(s=s, reg_list=reg_list)
     context.update(timezone_ctx())
     context.update(navbar_ctx(current_position=['Snapshots']))
     return render(request=request, template_name='ffxivws/snapshot.html.jinja', using='jinja', context=context)
