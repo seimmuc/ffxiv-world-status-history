@@ -8,4 +8,5 @@ urlpatterns = [
     path('snaps/latest', views.snapshot_latest_redirect, name='snapshot_latest'),
     path('world/<str:world_name>', views.world_history, name='world_history'),
     path('set_timezone', views.set_timezone, name='set_timezone'),
+    path('settings', views.set_setting, name='settings'),
 ]

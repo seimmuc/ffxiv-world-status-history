@@ -346,3 +346,29 @@ section.snapshot-dc-block .world-name > a:visited {
   cursor: default;
   background-color: #555;
 }
+
+span.world-title {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.world-fav-btn-form .world-fav-btn {
+  display: block;
+  background: none;
+  border: none;
+  font-size: 0.5em;
+  color: gold;
+  margin-top: 8px;
+  transition: transform 0.1s;
+}
+.world-fav-btn-form .world-fav-btn:hover:not(:disabled) {
+  transform: scale(1.15);
+}
+.world-fav-btn-form .world-fav-btn:active:not(:disabled) {
+  transform: scale(0.9);
+}
+.world-fav-btn-form .world-fav-btn:disabled {
+  color: rgb(184, 184, 184);
+}

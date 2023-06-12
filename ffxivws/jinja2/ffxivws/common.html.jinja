@@ -7,7 +7,7 @@
 {% set current_tz = current_tz|string %}
   <form id="timezone-form" action="{{ url('set_timezone') }}" method="post">
     {{ csrf_input }}
-    <input type="hidden" name="redirect_to" value="{{ return_url }}">
+    <input type="hidden" name="redirect-to" value="{{ return_url }}">
     <label for="timezone-selector">Select timezone</label>
     <select id="timezone-selector" name="timezone">
      {% for tz in tz_list %}
@@ -77,6 +77,22 @@
     <p>{{ day_sums|length - 1 }} days ago</p>
   </div>
 </div>
+{% endmacro %}
+
+{% macro set_setting_form(csrf_input, redirect_to=none, form_class=none) %}
+<form {% if form_class %}class="{{ form_class }}" {% endif -%} action="{{ url('settings') }}" method="post">
+  {{ csrf_input }}
+  {% if redirect_to %}<input type="hidden" name="redirect-to" value="{{ redirect_to }}">{% endif %}
+  {{ caller() }}
+</form>
+{% endmacro %}
+
+{% macro world_favorite_button(csrf_input, world_name, is_fav, enabled, redirect_to=none) %}
+ {% call set_setting_form(csrf_input, redirect_to, 'world-fav-btn-form') %}
+  <button class="world-fav-btn" {% if enabled %}type="submit" name="world-favs" value="{% if is_fav %}remove{% else %}add{% endif %}:{{ world_name }}"{% else %}disabled{% endif %}>
+    <i class="{% if is_fav %}fa-solid{% else %}fa-regular{% endif %} fa-star"></i>
+  </button>
+ {% endcall %}
 {% endmacro %}
 
 {# Snapshot block #}

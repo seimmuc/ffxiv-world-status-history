@@ -36,6 +36,7 @@ CLASSIFICATIONS_ORD: dict[WorldState.Classification, int] = {e: i for i, e in en
 CHAR_CREATION_ENUM: dict[str, WorldState.CharCreation] = {e.value: e for e in WorldState.CharCreation}
 CHAR_CREATION_ORD: dict[WorldState.CharCreation, int] = {e: i for i, e in enumerate(WorldState.CharCreation)}
 DAYS_OPTIONS = [('Week', 7), ('2 Weeks', 14), ('Month', 30), ('90 Days', 90)]
+FAVORITES_MAX = 5
 
 
 # Utility classes and functions
@@ -246,20 +247,55 @@ def world_history(request: HttpRequest, world_name: str):
     today = timezone.localdate()
     world_summaries, js_data = get_daily_world_summaries_and_json(worlds=[world], to_date=today,
                                                                   history_length=history_length)
-    context = dict(days=world_summaries[world.id], world=world, today=today, days_opt=DAYS_OPTIONS, js_data=js_data)
+
+    favorite_worlds: list[int] | None = request.session.get('favorite_worlds')
+    is_favorite = favorite_worlds is not None and world.id in favorite_worlds
+    can_change_favorite = is_favorite or (0 if favorite_worlds is None else len(favorite_worlds)) < FAVORITES_MAX
+
+    context = dict(days=world_summaries[world.id], world=world, today=today, days_opt=DAYS_OPTIONS, js_data=js_data,
+                   is_favorite=is_favorite, can_change_favorite=can_change_favorite)
     context.update(timezone_ctx())
     context.update(navbar_ctx(current_position=['Worlds', world.data_center.name, world.name]))
     return render(request=request, template_name='ffxivws/world.html.jinja', using='jinja', context=context)
 
 
-# Set timezone POST endpoint
+# POST endpoints
 
 @require_POST
 def set_timezone(request: HttpRequest):
     tz = request.POST.get('timezone', default='UTC')
     if tz in TIMEZONES:
         request.session['timezone'] = tz
-    redirect_to = request.POST.get('redirect_to', default='/')
+    redirect_to = request.POST.get('redirect-to', default='/')
     return HttpResponseRedirect(redirect_to=redirect_to, status=303)
 
 
+@require_POST
+def set_setting(request: HttpRequest):
+    # Modify world favorites
+    favs_value: str = request.POST.get('world-favs', None)
+    if favs_value:
+        for favs_action in favs_value.split(','):
+            fas = favs_action.split(':', maxsplit=1)
+            if fas[0] == 'clear':
+                request.session.pop('favorite_worlds', None)
+            elif len(fas) == 2 and fas[0] in ('add', 'remove'):
+                favorite_worlds: list[int] | None = request.session.get('favorite_worlds', default=[])
+                if fas[0] == 'add' and len(favorite_worlds) >= FAVORITES_MAX:
+                    continue
+                world_name = fas[1].lower()
+                if len(world_name) > 20 or not world_name.isascii():
+                    continue
+                try:
+                    world = World.objects.get(name__iexact=world_name)
+                    fws = set(favorite_worlds)
+                    if fas[0] == 'add':
+                        fws.add(world.id)
+                    else:
+                        fws.remove(world.id)
+                    request.session['favorite_worlds'] = list(fws)
+                except World.DoesNotExist:
+                    continue
+
+    redirect_to = request.POST.get('redirect-to', default='/')
+    return HttpResponseRedirect(redirect_to=redirect_to, status=303)
