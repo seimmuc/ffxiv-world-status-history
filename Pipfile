@@ -8,6 +8,7 @@ django = "*"
 psycopg2 = "*"
 jinja2 = "*"
 celery = "*"
+fontawesomefree = "~=6.4"
 
 [dev-packages]
 

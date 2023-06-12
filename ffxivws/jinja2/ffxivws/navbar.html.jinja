@@ -13,6 +13,7 @@
       {{ nav_item(child, depth + 1, position) }}
      {% endfor %}
     </ul>
+    <i class="arrow fa-solid {% if depth == 0 %}fa-caret-down{% else %}fa-caret-right{% endif %}"></i>
   </li>
  {% elif item.type == 'button' %}
   <li class="navbar-item{% if position[depth] == item.display_text %} current{% endif %} button">

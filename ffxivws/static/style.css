@@ -149,7 +149,7 @@ a.button:hover {
 #navbar ul.navmenu > li.navbar-item.dropright > a {
   padding: 0 7px;
 }
-#navbar ul.navmenu > li.navbar-item.button > a:hover,
+#navbar ul.navmenu > li.navbar-item.button:hover,
 #navbar ul.navmenu > li.navbar-item.dropdown:hover,
 #navbar ul.navmenu > li.navbar-item.dropright:hover {
   background-color: #fcc3;
@@ -164,19 +164,12 @@ a.button:hover {
 #navbar ul.navmenu > li.navbar-item.button > a:visited {
   color: #d9ebea;
 }
-#navbar li.dropdown::after, #navbar li.dropright::after {
-  font-size: 0.4em;
+#navbar li.dropdown > .arrow, #navbar li.dropright > .arrow {
+  font-size: 0.75em;
   align-self: flex-end;
   margin-inline-start: -2px;
   padding-inline-end: 5px;
   padding-block-end: 4px;
-}
-#navbar li.dropdown::after {
-  content: '▼'; /* ▼, ᐁ, ᐯ */
-}
-#navbar li.dropright::after {
-  content: '❱';
-  align-self: center;
 }
 
 /* World icon styles */
