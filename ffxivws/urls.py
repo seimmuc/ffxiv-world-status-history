@@ -9,4 +9,5 @@ urlpatterns = [
     path('world/<str:world_name>', views.world_history, name='world_history'),
     path('set_timezone', views.set_timezone, name='set_timezone'),
     path('settings', views.set_setting, name='settings'),
+    path('api/settings', views.set_setting_api, name='api-settings'),
 ]

@@ -6,6 +6,86 @@
 
 {% block head_extra %}
 {{ world_history_head(js_data) }}
+<script>
+  {# // this script contains jinja injections +#}
+  const settingsApiEndpoint = '{{ url("api-settings") }}';
+
+  function setFavBtnIcon(buttonTag, iconType, worldName=undefined) {
+    switch (iconType) {
+      case 'loading':
+        buttonTag.html('<i class="fa-solid fa-spinner fa-spin-pulse" style="color: #70a1f5;"></i>');
+        buttonTag.prop('disabled', true);
+        break;
+      case 'favorited':
+        buttonTag.html('<i class="fa-solid fa-star"></i>');
+        buttonTag.attr('value', `remove:${worldName}`);
+        buttonTag.prop('disabled', false);
+        break;
+      case 'unfavorited':
+        buttonTag.html('<i class="fa-regular fa-star"></i>');
+        buttonTag.attr('value', `add:${worldName}`);
+        buttonTag.prop('disabled', false);
+        break;
+      case 'error':
+        buttonTag.html('<i class="fa-solid fa-circle-xmark" style="color: #d65f57;"></i>');
+        buttonTag.prop('disabled', true);
+        break;
+    }
+  }
+  function parseFavBtnAction(actionString) {
+    if (actionString === undefined) {
+      return undefined, undefined;
+    }
+    const [act, wn] = actionString.split(':');
+    return [({'add': true, 'remove': false})[act.trim()], wn.trim()];
+  }
+
+  $(document).ready(function() {
+    const favForm = $('.world-title .world-fav-btn-form');
+    favForm.each(function() {
+      const formTag = $(this);
+      const buttonTag = $('.world-fav-btn', formTag);
+      const csrftoken = $('input[name=csrfmiddlewaretoken]', formTag).attr('value');
+      
+      formTag.on('submit', e => {
+        const action = buttonTag.attr('value');
+        const [willFav, worldName] = parseFavBtnAction(action);
+        if (willFav === undefined || buttonTag.prop('disabled')) {
+          return;
+        }
+        e.preventDefault();
+        const req = $.post({url: settingsApiEndpoint, data: JSON.stringify({'world-favs': action}), dataType: 'json', headers: {'X-CSRFToken': csrftoken} });
+        req.done(data => {
+          console.info(data);
+          switch (data.result) {
+            case 'ok':
+              const operationResult = data.actions.find(e => e[0] == action);
+              if (operationResult === undefined) {
+                setFavBtnIcon(buttonTag, 'error');
+              } else {
+                if (operationResult[1]) {
+                  // operation was successful
+                  setFavBtnIcon(buttonTag, willFav? 'favorited' : 'unfavorited', worldName);
+                  buttonTag.attr('value', `${willFav? 'remove' : 'add'}:${worldName}`);
+                } else {
+                  setFavBtnIcon(buttonTag, willFav? 'unfavorited' : 'favorited', worldName);
+                }
+              }
+              break;
+            case 'error':
+            default:
+              setFavBtnIcon(buttonTag, 'error');
+              break;
+          }
+        });
+        req.fail((_, status) => {
+          setFavBtnIcon(buttonTag, 'error');
+        });
+        setFavBtnIcon(buttonTag, 'loading');
+      });
+    });
+  });
+</script>
 {% endblock %}
 
 {% block title %}World {{ world.name }}{% endblock %}

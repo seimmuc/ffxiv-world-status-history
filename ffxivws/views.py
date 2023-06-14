@@ -5,6 +5,7 @@ from datetime import datetime, date, time, timedelta
 from itertools import chain
 from typing import TypeVar, NamedTuple, List, Iterator, Any
 
+from django.contrib.sessions.backends.base import SessionBase
 from django.db.models import QuerySet, Choices
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -270,21 +271,24 @@ def set_timezone(request: HttpRequest):
     return HttpResponseRedirect(redirect_to=redirect_to, status=303)
 
 
-@require_POST
-def set_setting(request: HttpRequest):
+def set_setting_func(session: SessionBase, actions_dict: dict[str, Any]) -> list[tuple]:
+    res = []
     # Modify world favorites
-    favs_value: str = request.POST.get('world-favs', None)
+    favs_value: str = actions_dict.get('world-favs', None)
     if favs_value:
         for favs_action in favs_value.split(','):
             fas = favs_action.split(':', maxsplit=1)
             if fas[0] == 'clear':
-                request.session.pop('favorite_worlds', None)
+                session.pop('favorite_worlds', None)
+                res.append((favs_action, True))
             elif len(fas) == 2 and fas[0] in ('add', 'remove'):
-                favorite_worlds: list[int] | None = request.session.get('favorite_worlds', default=[])
+                favorite_worlds: list[int] | None = session.get('favorite_worlds', default=[])
                 if fas[0] == 'add' and len(favorite_worlds) >= FAVORITES_MAX:
+                    res.append((favs_action, False))
                     continue
                 world_name = fas[1].lower()
                 if len(world_name) > 20 or not world_name.isascii():
+                    res.append((favs_action, False))
                     continue
                 try:
                     world = World.objects.get(name__iexact=world_name)
@@ -293,9 +297,26 @@ def set_setting(request: HttpRequest):
                         fws.add(world.id)
                     else:
                         fws.remove(world.id)
-                    request.session['favorite_worlds'] = list(fws)
+                    session['favorite_worlds'] = list(fws)
+                    res.append((favs_action, True))
                 except World.DoesNotExist:
+                    res.append((favs_action, False))
                     continue
+    return res
 
+
+@require_POST
+def set_setting(request: HttpRequest):
+    set_setting_func(session=request.session, actions_dict=request.POST)
     redirect_to = request.POST.get('redirect-to', default='/')
     return HttpResponseRedirect(redirect_to=redirect_to, status=303)
+
+
+@require_POST
+def set_setting_api(request: HttpRequest):
+    try:
+        action_requests = json.loads(request.body)
+        action_results = set_setting_func(session=request.session, actions_dict=action_requests)
+        return HttpResponse(json.dumps(dict(result='ok', actions=action_results)).encode('utf8'))
+    except json.JSONDecodeError:
+        return HttpResponse(b'{"result":"error"}')
