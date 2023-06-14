@@ -16,7 +16,7 @@ $(document).ready(function() {
     localTz = undefined;
   }
 
-  localBtn.click(e => {
+  localBtn.on('click', e => {
     let option = selectElm.find(`[value='${localTz}']`).first();
     if (option.length) {
       selectElm.children('option').filter(function() {

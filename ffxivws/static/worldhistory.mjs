@@ -60,7 +60,7 @@ export default function init(worldStateData, snapsUrlBase) {
       const snapshotIds = blockTag.attr('all-snapshots').split(',').filter(s => s.trim());
       const date = new Date(`${blockTag.attr('day')}T00:00:00`);  // date-time form must be used so that browser assumes local time instead of UTC
       const attrType = Array.from(this.parentElement.classList).find(c => STATE_ATTRIBUTES.includes(c));
-      blockTag.click(e => {
+      blockTag.on('click', e => {
         // If clicked inside child popup, ignore click
         if (!blockTag.is(e.target) && $(e.target).parentsUntil(blockTag).is(function() {return this.classList.contains('details-popup');})) {
           return;
@@ -86,7 +86,7 @@ export default function init(worldStateData, snapsUrlBase) {
     });
   });
   
-  $(window).click(event => {
+  $(window).on('click', event => {
     if (barBlockPopup === undefined) {
       return;
     }

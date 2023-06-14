@@ -32,7 +32,7 @@
       if (button.hasClass('on')) {
         activeRegions.add(regionName);
       }
-      button.click(_ => {
+      button.on('click', _ => {
         if (activeRegions.delete(regionName)) {
           button.removeClass('on');
           updateDcs(true);
