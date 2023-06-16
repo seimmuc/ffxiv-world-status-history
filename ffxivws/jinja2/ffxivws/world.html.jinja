@@ -1,5 +1,5 @@
 {% extends "ffxivws/base.html.jinja" %}
-{% from 'ffxivws/common.html.jinja' import world_history_head, world_history_section, world_favorite_button %}
+{% from 'ffxivws/common.html.jinja' import world_history_head, world_history_section, world_history_title_with_favbtn %}
 
 {% set show_header_title = true %}
 {% set main_id = 'world-main' %}
@@ -89,7 +89,7 @@
 {% endblock %}
 
 {% block title %}World {{ world.name }}{% endblock %}
-{% block header_title %}<span class="world-title">{{ world.name }} {{ world_favorite_button(csrf_input, world.name, is_favorite, can_change_favorite, request.get_full_path()) }}</span>{% endblock %}
+{% block header_title %}{{ world_history_title_with_favbtn(world.name, false, csrf_input, is_favorite, can_change_favorite, request.get_full_path()) }}{% endblock %}
 
 {% block header_extra %}
   <div id="days-range-buttons">

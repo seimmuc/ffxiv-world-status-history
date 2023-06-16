@@ -60,7 +60,7 @@
   </ol>
 {% endmacro %}
 
-{% macro world_history_section(day_sums, world_id, today) %}
+{% macro world_history_section(day_sums, world_id, today, header=none) %}
 <div class="history-bars-section
     {%- if day_sums|length < 9 %} week
     {%- elif day_sums|length < 16 %} twoweek
@@ -68,6 +68,9 @@
     {%- else %} multmonth
     {%- endif -%}
 " world-id="{{ world_id }}">
+  {% if header %}
+    {{ header }}
+  {% endif %}
   {{ history_bar(day_sums, 'status', 'Status', today) }}
   {{ history_bar(day_sums, 'classification', 'Classification', today) }}
   {{ history_bar(day_sums, 'charcreate', 'Character creation', today) }}
@@ -93,6 +96,13 @@
     <i class="{% if is_fav %}fa-solid{% else %}fa-regular{% endif %} fa-star"></i>
   </button>
  {% endcall %}
+{% endmacro %}
+
+{% macro world_history_title_with_favbtn(world_name, linkify_world_name, csrf_input, is_favorite, can_change_favorite, current_url) %}
+<span class="world-title">
+  <a {%- if linkify_world_name %} href="{{ url('world_history', kwargs={'world_name': world_name}) }}"{% endif %}>{{ world_name }}</a>
+  {{ world_favorite_button(csrf_input, world_name, is_favorite, can_change_favorite, current_url) }}
+</span>
 {% endmacro %}
 
 {# Snapshot block #}

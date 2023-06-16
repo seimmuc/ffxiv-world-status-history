@@ -58,6 +58,22 @@ a.button:hover {
   background-color: #777;
 }
 
+span.world-title {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+span.world-title > a[href] {
+  text-decoration: none;
+  color: #ebebd9;
+}
+span.world-title > a:visited {
+  color: #d9ebea;
+}
+
 /* Navbar */
 
 #navbar {
@@ -347,20 +363,13 @@ section.snapshot-dc-block .world-name > a:visited {
   background-color: #555;
 }
 
-span.world-title {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: center;
-}
-
 .world-fav-btn-form .world-fav-btn {
   display: block;
   background: none;
   border: none;
   font-size: 0.5em;
   color: gold;
-  margin-top: 8px;
+  margin-top: 0.5em;
   transition: transform 0.1s;
 }
 .world-fav-btn-form .world-fav-btn:hover:not(:disabled) {
