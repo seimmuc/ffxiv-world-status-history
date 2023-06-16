@@ -1,3 +1,4 @@
+import functools
 import json
 import zoneinfo
 from dataclasses import dataclass
@@ -26,7 +27,8 @@ regions_abr_map = {
     'jp': 'Japan'
 }
 TIMEZONES = zoneinfo.available_timezones()
-TIMEZONES.remove('localtime')
+if 'localtime' in TIMEZONES:
+    TIMEZONES.remove('localtime')
 TIMEZONES_LIST = sorted(TIMEZONES)
 # Move UTC to the front of the list
 TIMEZONES_LIST.remove('UTC')
@@ -84,7 +86,8 @@ class NavbarButton(NavbarItem):
     type = 'button'
 
 
-def build_navbar() -> tuple[list[NavbarItem], dict[str, dict[str, list[str]]]]:
+@functools.cache
+def get_navbar() -> list[NavbarItem]:
     wld_dict: dict[str, dict[str, list[str]]] = {}  # Dict[region_name, Dict[dc_name, List[world_name]]]
     for w in World.objects.all():   # type: World
         dc = w.data_center
@@ -110,7 +113,7 @@ def build_navbar() -> tuple[list[NavbarItem], dict[str, dict[str, list[str]]]]:
         NavbarMenu(display_text='Snapshots', children=[
             NavbarButton(display_text='Latest', target_url=reverse_lazy('snapshot_latest'))
         ])
-    ], wld_dict
+    ]
 
 
 def timezone_ctx() -> dict[str, Any]:
@@ -118,11 +121,7 @@ def timezone_ctx() -> dict[str, Any]:
 
 
 def navbar_ctx(current_position: list[str] | None = None) -> dict[str, Any]:
-    return {'navbar': navbar, 'navbar_pos': current_position}
-
-
-# Constants that require utility classes/functions
-navbar, world_map = build_navbar()
+    return {'navbar': get_navbar(), 'navbar_pos': current_position}
 
 
 # Index (main page) view
@@ -131,7 +130,7 @@ def index(request: HttpRequest):
     favorite_worlds: list[int] | None = request.session.get('favorite_worlds')
     # snapshot_shown: bool | None = request.session.get('index_snap')
     snapshot_shown: bool | None = True
-    context = dict(worlds=world_map)
+    context = dict()
 
     if favorite_worlds:
         try:
