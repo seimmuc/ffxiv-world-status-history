@@ -1,13 +1,50 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>FFXIV World Status History</title>
-</head>
-<body>
-  <p>FFXIV World Status History</p>
-</body>
-</html>
+{% extends "ffxivws/base.html.jinja" %}
+{% from 'ffxivws/common.html.jinja' import world_history_head, world_history_section, world_history_title_with_favbtn, snapshot_section %}
+
+{% set main_id = 'index-main' %}
+
+{% block head_extra %}
+{% if fav_worlds_js_data %}
+{{ world_history_head(fav_worlds_js_data) }}
+{% endif %}
+<script>
+</script>
+{% endblock %}
+
+{% block title %}FFXIV World Status History{% endblock %}
+
+{% macro world_section_header(header_html) %}
+{% endmacro %}
+
+{% block main %}
+  {# {% for region_name, dc in worlds.items() %}
+    <p>{{ region_name }}</p>
+  {% endfor %} #}
+
+  {# Favorite worlds #}
+  <section id="favorite-worlds-section" class="index-section">
+    <header class="index-section-header">
+      <span>Favorite worlds</span>
+    </header>
+    <div class="index-section-content">
+    {% if favorite_worlds %}
+      {% for world, summaries in fav_worlds_summaries %}
+      {{ world_history_section(summaries, world.id, today, world_history_title_with_favbtn(world.name, true, csrf_input, true, true, request.get_full_path())) }}
+      {% endfor %}
+    {% else %}
+      <p id="favorite-worlds-empty">You did not favorite any worlds</p>
+    {% endif %}
+    </div>
+  </section>
+
+  {% if show_snapshot is true %}
+  <section id="latest-snapshot-section" class="index-section">
+    <header class="index-section-header">
+      <span>Latest snapshot</span>
+    </header>
+    <div class="index-section-content">
+      {{ snapshot_section(regions, regions_active) }}
+    </div>
+  </section>
+  {% endif %}
+{% endblock %}

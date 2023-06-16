@@ -127,7 +127,35 @@ navbar, world_map = build_navbar()
 # Index (main page) view
 
 def index(request: HttpRequest):
-    return render(request=request, template_name='ffxivws/index.html.jinja', context={})
+    favorite_worlds: list[int] | None = request.session.get('favorite_worlds')
+    # snapshot_shown: bool | None = request.session.get('index_snap')
+    snapshot_shown: bool | None = True
+    context = dict(worlds=world_map)
+
+    if favorite_worlds:
+        try:
+            worlds_queryset: QuerySet[World] = World.objects.filter(id__in=favorite_worlds)
+            worlds: list[World] = list(worlds_queryset)
+            today = timezone.localdate()
+            world_summaries, js_data =\
+                get_daily_world_summaries_and_json(worlds=worlds, to_date=today, history_length=7)
+            w_sum_list = [(w, world_summaries.get(w.id, None)) for w in worlds]
+            context.update(fav_worlds_summaries=w_sum_list, fav_worlds_js_data=js_data, today=today)
+        except World.DoesNotExist:
+            favorite_worlds = None
+
+    if snapshot_shown is True or (snapshot_shown is None and not favorite_worlds):
+        try:
+            snapshot = Snapshot.objects.latest('timestamp')
+            context.update(snapshot_ctx(s=snapshot, reg_list=['all']))
+            snapshot_shown = True
+        except Snapshot.DoesNotExist:
+            snapshot_shown = None
+
+    context.update(show_snapshot=snapshot_shown, favorite_worlds=favorite_worlds)
+    context.update(timezone_ctx())
+    context.update(navbar_ctx(current_position=['Home']))
+    return render(request=request, template_name='ffxivws/index.html.jinja', context=context)
 
 
 # Snapshot view

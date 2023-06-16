@@ -248,6 +248,35 @@ span.world-title > a:visited {
   background-image: url(/static/icons/charcr_unknown.svg);
 }
 
+/* Index page */
+
+#index-main .index-section {
+  border: 2px solid #fff3;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 5px;
+  margin-top: 25px;
+}
+#index-main .index-section > .index-section-header {
+  padding: 5px 10px;
+  border-bottom: 2px solid #fff3;
+  font-weight: bold;
+  font-size: 1.1em;
+  background-color: #335;
+  text-align: center;
+}
+#index-main .index-section > .index-section-content .history-bars-section {
+  margin: 8px 8px;
+}
+#index-main .index-section > .index-section-content .history-bars-section .world-title {
+  grid-column: 1 / span 2;
+  justify-self: center;
+  font-size: 1.5em;
+}
+#favorite-worlds-section #favorite-worlds-empty {
+  padding-left: 12px;
+}
+
 /* Snapshot page */
 
 #select-regions {
@@ -283,12 +312,13 @@ span.world-title > a:visited {
   background-color: rgba(0, 0, 0, 0.55) !important;
 }
 
-#snapshot-main {
+#snapshot-main,
+#index-main .index-section > .index-section-content {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: start;
-  align-items: start;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 section.snapshot-dc-block {
