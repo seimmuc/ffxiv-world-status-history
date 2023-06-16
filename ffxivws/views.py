@@ -281,8 +281,8 @@ def world_history(request: HttpRequest, world_name: str):
     is_favorite = favorite_worlds is not None and world.id in favorite_worlds
     can_change_favorite = is_favorite or (0 if favorite_worlds is None else len(favorite_worlds)) < FAVORITES_MAX
 
-    context = dict(days=world_summaries[world.id], world=world, today=today, days_opt=DAYS_OPTIONS, js_data=js_data,
-                   is_favorite=is_favorite, can_change_favorite=can_change_favorite)
+    context = dict(days=world_summaries.get(world.id, None), world=world, today=today, days_opt=DAYS_OPTIONS,
+                   js_data=js_data, is_favorite=is_favorite, can_change_favorite=can_change_favorite)
     context.update(timezone_ctx())
     context.update(navbar_ctx(current_position=['Worlds', world.data_center.name, world.name]))
     return render(request=request, template_name='ffxivws/world.html.jinja', using='jinja', context=context)

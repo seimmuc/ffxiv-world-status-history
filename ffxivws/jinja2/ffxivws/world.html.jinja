@@ -7,7 +7,7 @@
 {% block head_extra %}
 {{ world_history_head(js_data) }}
 <script>
-  {# // this script contains jinja injections +#}
+  {# /* this script contains jinja injections */ #}
   const settingsApiEndpoint = '{{ url("api-settings") }}';
 
   function setFavBtnIcon(buttonTag, iconType, worldName=undefined) {
@@ -94,11 +94,15 @@
 {% block header_extra %}
   <div id="days-range-buttons">
    {% for bname, dc in days_opt %}
-    <a class="button{% if days|length - 1 == dc %} current{% endif %}" href="{{ '{u}?days={dc}'.format(u=url('world_history', kwargs={'world_name': world.name}), dc=dc) }}">{{ bname }}</a>
+    <a class="button{% if not days is none and days|length - 1 == dc %} current{% endif %}" href="{{ '{u}?days={dc}'.format(u=url('world_history', kwargs={'world_name': world.name}), dc=dc) }}">{{ bname }}</a>
    {% endfor %}
   </div>
 {% endblock %}
 
 {% block main %}
+ {% if days %}
   {{ world_history_section(days, world.id, today) }}
+ {% else %}
+  <p>No data</p>
+ {% endif %}
 {% endblock %}
