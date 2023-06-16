@@ -5,6 +5,7 @@ from datetime import datetime, date, time, timedelta
 from itertools import chain
 from typing import TypeVar, NamedTuple, List, Iterator, Any
 
+from django.conf import settings
 from django.contrib.sessions.backends.base import SessionBase
 from django.db.models import QuerySet, Choices
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
@@ -37,7 +38,7 @@ CLASSIFICATIONS_ORD: dict[WorldState.Classification, int] = {e: i for i, e in en
 CHAR_CREATION_ENUM: dict[str, WorldState.CharCreation] = {e.value: e for e in WorldState.CharCreation}
 CHAR_CREATION_ORD: dict[WorldState.CharCreation, int] = {e: i for i, e in enumerate(WorldState.CharCreation)}
 DAYS_OPTIONS = [('Week', 7), ('2 Weeks', 14), ('Month', 30), ('90 Days', 90)]
-FAVORITES_MAX = 5
+FAVORITES_MAX = settings.FAVORITE_WORLDS_MAX
 
 
 # Utility classes and functions
