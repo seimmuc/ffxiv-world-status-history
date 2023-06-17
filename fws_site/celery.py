@@ -22,6 +22,6 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'capture_snapshot': {
         'task': 'capture_full_snapshot',
-        'schedule': crontab(hour='0,12')
+        'schedule': crontab(hour='0,6,12,18', minute='0')
     },
 }

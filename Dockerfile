@@ -13,10 +13,15 @@ COPY fws_site ./fws_site
 COPY ffxivws ./ffxivws
 
 FROM fws_app as fws_web
+RUN pipenv install --deploy --system --categories="web-server"
 # install and run server
 RUN pip install gunicorn
 ENTRYPOINT ["gunicorn", "fws_site.wsgi"]
 CMD ["--bind=0.0.0.0:80"]
+
+FROM fws_app as fws_cel
+RUN pipenv install --deploy --system --categories="background-worker"
+ENTRYPOINT ["celery", "-A", "fws_site"]
 
 FROM fws_app as fws_manage
 # copy manage.py and run it
@@ -24,7 +29,7 @@ COPY manage.py .
 ENTRYPOINT ["python", "manage.py"]
 CMD ["help"]
 
-FROM nginx:1.23.4-alpine as nginx_rev
+FROM nginx:1.24-alpine as nginx_rev
 # remove existing config
 RUN rm /etc/nginx/conf.d/*
 # Copy new config

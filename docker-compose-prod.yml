@@ -9,11 +9,9 @@ services:
       FWSWEB_DB_HOST: db
     depends_on:
       - db
-    ports:
-      - "8081:80"
 
   db:
-    image: postgres:15.2-alpine
+    image: postgres:15.3-alpine
     restart: always
     environment:
       POSTGRES_USER: fws
@@ -32,6 +30,14 @@ services:
               "-c", "default_transaction_isolation=read committed",
               "-c", "timezone=UTC"]
 
+  rabbitmq:
+    image: rabbitmq:3.12-alpine
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: fws
+      RABBITMQ_DEFAULT_PASS: fws_pass
+      RABBITMQ_DEFAULT_VHOST: fws_vhost
+
   rev_proxy:
     build:
       context: .
@@ -41,3 +47,30 @@ services:
       - web
     ports:
       - "8088:80"
+
+  celery_worker:
+    build:
+      context: .
+      target: fws_cel
+    restart: "no"
+    command: ["worker", "--loglevel=DEBUG", "--logfile=/tmp/celery.log"]
+    environment:
+      FWSWEB_ENVIRONMENT: production
+      FWSWEB_DB_HOST: db
+    depends_on:
+      - rabbitmq
+      - db
+
+  celery_beat:
+    build:
+      context: .
+      target: fws_cel
+    restart: "no"
+    command: ["beat", "--loglevel=DEBUG", "--logfile=/tmp/celery.beat.log",
+              "--scheduler=django_celery_beat.schedulers:DatabaseScheduler"]
+    environment:
+      FWSWEB_ENVIRONMENT: production
+      FWSWEB_DB_HOST: db
+    depends_on:
+      - celery_worker
+      - db

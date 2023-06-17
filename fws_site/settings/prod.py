@@ -22,4 +22,5 @@ DATABASES = {
     }
 }
 
-# TODO add CELERY_BROKER_URL and CELERY_RESULT_BACKEND
+CELERY_BROKER_URL = 'amqp://fws:fws_pass@rabbitmq:5672/fws_vhost'
+CELERY_RESULT_BACKEND = 'rpc://fws:fws_pass@rabbitmq:5672/fws_vhost'
