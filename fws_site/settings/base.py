@@ -29,6 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 ALLOWED_HOSTS = []
+APPEND_SLASH = False
 
 
 # Application definition
