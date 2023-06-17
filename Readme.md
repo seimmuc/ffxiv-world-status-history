@@ -23,20 +23,20 @@ thing in those lists.
     pipenv install django
     ```
 
-3. Prepare project by running `init.sh` script. This will create required directories and
+3. Prepare project by running `init.sh` script. This will create required directories and files for deployment.
     ```shell
     ./init.sh
     ```
+    * Only docker is required beyond this step, everything else installed in steps 1 and 2 can be safely removed.
 
 4. Initialize database by running:
     ```shell
     docker compose --file docker-compose-prod-manage.yml run manage migrate
-    python manage.py loaddata --app ffxivws --format json worlds.fixture.json
+    docker compose --file docker-compose-prod-manage.yml run manage loaddata --app ffxivws --format json worlds.fixture.json
     ```
-    * Only docker is required beyond this step, everything else installed in steps 1 and 2 can be safely removed.
 
 5. Start the web server:
     ```shell
-    docker compose --file docker-compose-prod.yml up
+    docker compose --file docker-compose-prod.yml up --remove-orphans
     ```
     * you may append `-d` option at the end of that command to run it in detached mode
