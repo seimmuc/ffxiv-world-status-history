@@ -1,0 +1,35 @@
+services:
+  web:
+    extends:
+      file: docker-compose-prod.yml
+      service: web
+
+  db:
+    extends:
+      file: docker-compose-prod.yml
+      service: db
+
+  rabbitmq:
+    extends:
+      file: docker-compose-prod.yml
+      service: rabbitmq
+
+  celery_worker:
+    extends:
+      file: docker-compose-prod.yml
+      service: celery_worker
+
+  celery_beat:
+    extends:
+      file: docker-compose-prod.yml
+      service: celery_beat
+
+  rev_proxy:
+    build:
+      context: .
+      target: nginx_rev
+    restart: "no"
+    depends_on:
+      - web
+    ports:
+      - "80:80"

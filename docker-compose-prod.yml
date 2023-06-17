@@ -7,6 +7,8 @@ services:
     environment:
       FWSWEB_ENVIRONMENT: production
       FWSWEB_DB_HOST: db
+    ports:
+      - "8088:80"
     depends_on:
       - db
 
@@ -37,16 +39,6 @@ services:
       RABBITMQ_DEFAULT_USER: fws
       RABBITMQ_DEFAULT_PASS: fws_pass
       RABBITMQ_DEFAULT_VHOST: fws_vhost
-
-  rev_proxy:
-    build:
-      context: .
-      target: nginx_rev
-    restart: "no"
-    depends_on:
-      - web
-    ports:
-      - "8088:80"
 
   celery_worker:
     build:
