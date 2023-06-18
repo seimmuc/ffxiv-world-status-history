@@ -37,6 +37,7 @@ thing in those lists.
 
 5. Start the web server:
     ```shell
-    docker compose --file docker-compose-prod.yml up --remove-orphans
+    docker compose --file docker-compose-prod-revproxy.yml up --remove-orphans
     ```
+    * use `--file docker-compose-prod.yml` instead if you're going to set up your own reverse proxy
     * you may append `-d` option at the end of that command to run it in detached mode
