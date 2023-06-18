@@ -7,7 +7,7 @@ import os
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', 'ffxivws']
+ALLOWED_HOSTS = ['localhost', 'ffxivstatus', 'ffxivstatus.sei.place']
 
 DATABASES = {
     'default': {
