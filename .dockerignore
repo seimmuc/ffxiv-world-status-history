@@ -6,3 +6,4 @@ docker-compose*.yml
 Dockerfile
 init.sh
 Readme.md
+ffxivws/static_src

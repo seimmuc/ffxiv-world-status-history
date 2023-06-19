@@ -37,3 +37,4 @@ COPY deployment/fws_nginx.conf /etc/nginx/conf.d/fws_nginx.conf
 # Copy static files
 COPY deployment/static_collected/ /web/static/
 COPY ffxivws/static/ /web/static/
+COPY ffxivws/static/favicon.ico /web/
