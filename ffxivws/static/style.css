@@ -196,6 +196,9 @@ span.world-title > a:visited {
   padding-left: 0;
   padding-right: 30px;
 }
+#navbar div.tooltip {
+  font-size: 0.55em;
+}
 
 /* World icon styles */
 /* icon palette: https://coolors.co/7acc52-ad6ed4-4b8ad2-ccb233-d97777-a8a8a8 */
