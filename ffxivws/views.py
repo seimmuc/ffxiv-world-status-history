@@ -121,7 +121,7 @@ def timezone_ctx() -> dict[str, Any]:
 
 
 def navbar_ctx(current_position: list[str] | None = None) -> dict[str, Any]:
-    return {'navbar': get_navbar(), 'navbar_pos': current_position}
+    return {'navbar': get_navbar(), 'navbar_pos': current_position, 'repo_url': settings.PROJECT_REPO_URL}
 
 
 # Index (main page) view

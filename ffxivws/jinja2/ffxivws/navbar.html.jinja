@@ -29,5 +29,10 @@
     {{ nav_item(ni, 0, navbar_pos) }}
    {% endfor %}
   </ul>
+  <ul id="navbar-end" class="navmenu horizontal root">
+   {% if repo_url %}
+    <li class="navbar-item button"><a href="{{ repo_url }}"><i class="fa-brands fa-github"></i></a></li>
+   {% endif %}
+  </ul>
 </nav>
 {% endif %}

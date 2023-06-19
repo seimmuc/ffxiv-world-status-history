@@ -81,6 +81,11 @@ span.world-title > a:visited {
   top: 0;
   background-color: #222;
   z-index: 5;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
 }
 #navbar ul.navmenu {
   display: none;
@@ -186,6 +191,10 @@ span.world-title > a:visited {
   margin-inline-start: -2px;
   padding-inline-end: 5px;
   padding-block-end: 4px;
+}
+#navbar #navbar-end {
+  padding-left: 0;
+  padding-right: 30px;
 }
 
 /* World icon styles */

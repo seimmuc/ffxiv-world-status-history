@@ -142,3 +142,4 @@ CELERY_TIMEZONE = "UTC"
 
 # FFXIVWS settings
 FAVORITE_WORLDS_MAX = 6
+PROJECT_REPO_URL = 'https://github.com/seimmuc/ffxiv-world-status-history'
