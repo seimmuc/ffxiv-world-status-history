@@ -8,6 +8,18 @@ import os
 DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', 'ffxivstatus', 'ffxivstatus.sei.place']
+CSRF_TRUSTED_ORIGINS = ['https://ffxivstatus.sei.place']
+CSRF_COOKIE_DOMAIN = 'ffxivstatus.sei.place'
+
+
+# Comment out the following section if not using https
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+# Extra security, it's recommended to enable once you're certain everything works well
+# SECURE_HSTS_SECONDS = int(60 * 60 * 24 * 365.25)
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
 
 DATABASES = {
     'default': {
