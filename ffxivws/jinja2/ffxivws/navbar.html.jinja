@@ -23,6 +23,7 @@
 {%- endmacro %}
 
 {% if navbar %}
+<script src="{{ static('navbar.js') }}"></script>
 <nav id="navbar">
   <ul class="navmenu horizontal root">
    {% for ni in navbar %}
