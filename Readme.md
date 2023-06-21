@@ -1,4 +1,5 @@
-Site that displays status history of FFXIV worlds.
+Site that displays status history of FFXIV worlds. Includes maintenance, preference state and ability to character new 
+characters on each world. Live site can be found here: [ffxivstatus.sei.place](https://ffxivstatus.sei.place).
 
 ### Docker deployment
 
