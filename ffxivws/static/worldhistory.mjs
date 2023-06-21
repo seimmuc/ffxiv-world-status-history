@@ -85,7 +85,7 @@ export default function init(worldStateData, snapsUrlBase) {
       blockTag.removeAttr('day');
     });
   });
-  
+
   $(window).on('click', event => {
     if (barBlockPopup === undefined) {
       return;

@@ -4,15 +4,14 @@ function findChildTooltips(parent) {
 
 $(document).ready(function() {
   const tooltipElems = $('[tooltip-text]');
-  tooltipElems.hover(
-    function() {
-      findChildTooltips(this).remove();
-      $(this).append(`<div class="tooltip">${$(this).attr('tooltip-text')}</div>`);
-    }, function() {
-      findChildTooltips(this).remove();
-    }
-  );
-  tooltipElems.mousemove(function(e) {
+  tooltipElems.on('mouseenter', function() {
+    findChildTooltips(this).remove();
+    $(this).append(`<div class="tooltip">${$(this).attr('tooltip-text')}</div>`);
+  });
+  tooltipElems.on('mouseleave', function() {
+    findChildTooltips(this).remove();
+  });
+  tooltipElems.on('mousemove', function(e) {
     const tooltip = findChildTooltips(this);
     const body = $('body');
     let x = Math.min(e.clientX, body.outerWidth(true) - tooltip.outerWidth(true));

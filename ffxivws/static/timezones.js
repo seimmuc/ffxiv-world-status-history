@@ -1,7 +1,7 @@
 $(document).ready(function() {
   // Temporarily disable timezone button transitions
   $('#timezone-form button').addClass('notransition');
-  
+
   const selectElm = $('#timezone-form #timezone-selector');
   const updateBtn = $('#timezone-form #timezone-update-btn');
   const localBtn = $('#timezone-form #timezone-local-btn');
@@ -39,9 +39,9 @@ $(document).ready(function() {
     }
   }
 
-  selectElm.change(e => {
+  selectElm.on('change', e => {
     const newOption = selectElm.find(':selected');
-    
+
     // Update select element width
     const tempSelect = $(`<select id="timezone-selector"><option>${newOption.text()}</option></select>`);
     tempSelect.css('visibility', 'hidden').css('position', 'fixed');
