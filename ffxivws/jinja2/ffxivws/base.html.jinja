@@ -5,6 +5,8 @@
 <head>
   {% block head %}
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=0.5">
+  <meta name="theme-color" content="#444"/>
   <link rel="icon" href="{{ static('favicon/favicon_128.png') }}">
   <link rel="stylesheet" href="{{ static('style.css') }}">
   <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
@@ -13,7 +15,7 @@
   <link href="{{ static('fontawesomefree/css/regular.min.css') }}" rel="stylesheet" type="text/css">
   <link href="{{ static('fontawesomefree/css/brands.min.css') }}" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="{{ static('tooltips.css') }}">
-  <script src="{{ static('tooltips.js') }}"></script>
+  <script src="{{ static('tooltips.js') }}" defer></script>
   {{- timezone_head() -}}
   {% block head_extra %}{% endblock %}
   <title>{% block title %}FFXIV World Status History{% endblock %}</title>

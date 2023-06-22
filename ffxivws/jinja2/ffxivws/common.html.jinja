@@ -1,6 +1,6 @@
 {% macro timezone_head() %}
   <link rel="stylesheet" href="{{ static('timezones.css') }}">
-  <script src="{{ static('timezones.js') }}"></script>
+  <script src="{{ static('timezones.js') }}" defer></script>
 {% endmacro %}
 
 {% macro timezones_form(csrf_input, tz_list, current_tz, return_url) %}
@@ -92,7 +92,7 @@
 
 {% macro world_favorite_button(csrf_input, world_name, is_fav, enabled, redirect_to=none) %}
  {% call set_setting_form(csrf_input, redirect_to, 'world-fav-btn-form') %}
-  <button class="world-fav-btn" {% if enabled %}type="submit" name="world-favs" value="{% if is_fav %}remove{% else %}add{% endif %}:{{ world_name }}"{% else %}disabled{% endif %}>
+  <button class="world-fav-btn" title="Favorite world" {% if enabled %}type="submit" name="world-favs" value="{% if is_fav %}remove{% else %}add{% endif %}:{{ world_name }}"{% else %}disabled{% endif %}>
     <i class="{% if is_fav %}fa-solid{% else %}fa-regular{% endif %} fa-star"></i>
   </button>
  {% endcall %}
