@@ -6,7 +6,7 @@
     <a>{{ item.display_text }}</a>
   </li>
  {% elif item.type == 'menu' %}
-  <li class="navbar-item{% if position[depth] == item.display_text %} current{% endif %} {% if depth == 0 %}dropdown{% else %}dropright{% endif %}">
+  <li class="navbar-item{% if position[depth] == item.display_text %} current{% endif %} {% if depth == 0 %}dropdown{% else %}dropright{% endif %}"{% if position[depth] == item.display_text %} aria-current="page"{% endif %}>
     <a>{{ item.display_text }}</a>
     <ul class="navmenu vertical">
      {% for child in item.children %}
