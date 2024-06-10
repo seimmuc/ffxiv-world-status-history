@@ -766,5 +766,45 @@
       "data_center": 11,
       "name": "Zeromus"
     }
+  },
+  {
+    "model": "ffxivws.DataCenter",
+    "pk": 12,
+    "fields": {
+      "region": 2,
+      "name": "Shadow"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 82,
+    "fields": {
+      "data_center": 12,
+      "name": "Innocence"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 83,
+    "fields": {
+      "data_center": 12,
+      "name": "Pixie"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 84,
+    "fields": {
+      "data_center": 12,
+      "name": "Titania"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 85,
+    "fields": {
+      "data_center": 12,
+      "name": "Tycoon"
+    }
   }
 ]
