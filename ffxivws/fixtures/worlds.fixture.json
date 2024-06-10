@@ -806,5 +806,37 @@
       "data_center": 12,
       "name": "Tycoon"
     }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 86,
+    "fields": {
+      "data_center": 3,
+      "name": "Cuchulainn"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 87,
+    "fields": {
+      "data_center": 3,
+      "name": "Golem"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 88,
+    "fields": {
+      "data_center": 3,
+      "name": "Kraken"
+    }
+  },
+  {
+    "model": "ffxivws.World",
+    "pk": 89,
+    "fields": {
+      "data_center": 3,
+      "name": "Rafflesia"
+    }
   }
 ]
