@@ -49,8 +49,17 @@ def run_snapshot(text=None, http_code=None, manual=False):
                 f.write(log)
         else:
             s.result = 'Success'
-        if ws_count > 0:
-            s.save()
+        if ws_count < 1:
+            for world in worlds.values():
+                w_state = WorldState(
+                        snapshot=s,
+                        world=world,
+                        status=WorldState.Status.UNKNOWN,
+                        classification=WorldState.Classification.UNKNOWN,
+                        char_creation=WorldState.CharCreation.UNKNOWN
+                )
+                w_state.save()
+        s.save()
     elif http_code == 503:
         if not is_service_unavailable_page(text):
             raise FwsHTMLParseError('Got a 503 page that does not seem to be a full maintenance page')
