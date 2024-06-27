@@ -8,7 +8,7 @@ from typing import TypeVar, NamedTuple, List, Iterator, Any
 
 from django.conf import settings
 from django.contrib.sessions.backends.base import SessionBase
-from django.db.models import QuerySet, Choices
+from django.db.models import QuerySet, Choices, Count
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -146,7 +146,8 @@ def index(request: HttpRequest):
 
     if snapshot_shown is True or (snapshot_shown is None and not favorite_worlds):
         try:
-            snapshot = Snapshot.objects.latest('timestamp')
+            snapshot = Snapshot.objects.annotate(worldstate_count=Count('worldstate')).filter(worldstate_count__gt=0)\
+                    .latest('timestamp')
             context.update(snapshot_ctx(s=snapshot, reg_list=['all']))
             snapshot_shown = True
         except Snapshot.DoesNotExist:
@@ -163,7 +164,8 @@ def index(request: HttpRequest):
 # noinspection PyUnusedLocal
 def snapshot_latest_redirect(request: HttpRequest):
     try:
-        snapshot = Snapshot.objects.latest('timestamp')
+        snapshot = Snapshot.objects.annotate(worldstate_count=Count('worldstate')).filter(worldstate_count__gt=0)\
+                .latest('timestamp')
     except Snapshot.DoesNotExist:
         return HttpResponse(b'No snapshots found', status=404, content_type='text/plain')
     return redirect('snapshot_details', permanent=False, snap_id=snapshot.id)
