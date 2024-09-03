@@ -86,11 +86,11 @@ def fetch_data() -> tuple[str, int]:
 
 def iter_worlds(page_html: str) -> Iterator[Tuple[Tag, str]]:
     soup = BeautifulSoup(page_html, features='html.parser')
-    tab_tags = soup.select('body > div.ldst__bg > div.ldst__contents.clearfix > .js--tab-content')
+    tab_selector = 'body > div.ldst__bg > div.ldst__contents--worldstatus.clearfix > div.js--tab-content'
+    tab_tags = soup.select(tab_selector)
     if len(tab_tags) != 4:
         raise FwsHTMLParseError(f'{len(tab_tags)} region tab tags found, expected 4')
-    dc_tags = soup.select('body > div.ldst__bg > div.ldst__contents.clearfix > div.js--tab-content > '
-                          'ul.world-dcgroup > li.world-dcgroup__item')
+    dc_tags = soup.select(tab_selector + ' ul.world-dcgroup > li.world-dcgroup__item')
     for dc_tag in dc_tags:
         dc_name = dc_tag.select_one('h2.world-dcgroup__header').text
         world_tags = dc_tag.select('ul > li.item-list > div.world-list__item')
